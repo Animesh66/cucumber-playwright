@@ -8,4 +8,4 @@ Feature: Login Functionality
         When I enter valid credentials
         And I click the login button
         Then I should be redirected to the dashboard
-        And I should see a welcome messagen
+        And I should see a welcome message
