@@ -4,8 +4,8 @@ Feature: Login Functionality
     So that I can access my account and personalized features
     
     Scenario: Successful login with valid credentials
-        Given I am on the login page
-        When I enter valid credentials
+        Given I am on the home page
+        And I click the login link
+        When I enter email as "animesh213123@email.com" and password "Weclome@123" 
         And I click the login button
-        Then I should be redirected to the dashboard
-        And I should see a welcome message
+        Then I should see my username displayed on the page
