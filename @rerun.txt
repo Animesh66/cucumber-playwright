@@ -1,1 +1,1 @@
-tests/features/registration/registration.feature:6:12
+tests/features/registration/registration.feature:6:14

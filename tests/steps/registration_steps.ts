@@ -15,12 +15,12 @@ When('I enter valid registration details', async function () {
   this.email = `testuser${timestamp}@example.com`;
   this.password   = 'Test@1234';
 
-  await this.page.getByRole('radio', { name:'Male' }).check();  
-  await this.page.getByRole('textbox', { name:'FirstName' }).fill(this.firstName);
-  await this.page.getByRole('textbox', { name:'LastName' }).fill(this.lastName);
+  await this.page.getByRole('radio', { name:'Male', exact: true  }).check();  
+  await this.page.getByRole('textbox', { name:'First Name' }).fill(this.firstName);
+  await this.page.getByRole('textbox', { name:'Last Name' }).fill(this.lastName);
   await this.page.getByRole('textbox', { name:'Email' }).fill(this.email);
-  await this.page.getByRole('textbox', { name:'Password' }).fill(this.password);
-  await this.page.getByRole('textbox', { name:'ConfirmPassword' }).fill(this.password);
+  await this.page.getByRole('textbox', { name:'Password', exact: true }).fill(this.password);
+  await this.page.getByRole('textbox', { name:'Confirm Password', exact: true }).fill(this.password);
 }   );
 
 When('I click the register button', async function () {
@@ -55,9 +55,10 @@ When('I enter registration details with an existing email', async function () {
   this.email = 'animesh213123@email.com';
   this.password = 'Test@1234';
 
-  await this.page.getByRole('textbox', { name:'FirstName' }).fill(this.firstName);
-  await this.page.getByRole('textbox', { name:'LastName' }).fill(this.lastName);
+  await this.page.getByRole('radio', { name:'Male', exact: true  }).check(); 
+  await this.page.getByRole('textbox', { name:'First Name' }).fill(this.firstName);
+  await this.page.getByRole('textbox', { name:'Last Name' }).fill(this.lastName);
   await this.page.getByRole('textbox', { name:'Email' }).fill(this.email);
-  await this.page.getByRole('textbox', { name:'Password' }).fill(this.password);
-  await this.page.getByRole('textbox', { name:'ConfirmPassword' }).fill(this.password);
+  await this.page.getByRole('textbox', { name:'Password', exact: true }).fill(this.password);
+  await this.page.getByRole('textbox', { name:'Confirm Password', exact: true }).fill(this.password);
 });

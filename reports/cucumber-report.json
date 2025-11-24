@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 8235149760
+              "duration": 61438909222
             },
             "embeddings": [
               {
@@ -37,7 +37,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 736824355
+              "duration": 4708239839
             },
             "embeddings": [
               {
@@ -60,7 +60,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 40530138
+              "duration": 3200387377
             }
           },
           {
@@ -73,7 +73,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 993998881
+              "duration": 1738547363
             }
           },
           {
@@ -86,7 +86,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 44773575
+              "duration": 74022624
             }
           },
           {
@@ -99,7 +99,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 13398361
+              "duration": 115736314
             }
           },
           {
@@ -107,7 +107,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 38489530
+              "duration": 1190889120
             }
           }
         ],
@@ -126,7 +126,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 9189361028
+              "duration": 61438828343
             },
             "embeddings": [
               {
@@ -149,7 +149,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 585228610
+              "duration": 4707781118
             },
             "embeddings": [
               {
@@ -172,7 +172,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 40825402
+              "duration": 2859994467
             }
           },
           {
@@ -185,7 +185,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 569006923
+              "duration": 1312199521
             }
           },
           {
@@ -198,7 +198,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 89469911
+              "duration": 372392028
             }
           },
           {
@@ -206,7 +206,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 41286624
+              "duration": 1808065063
             }
           }
         ],
@@ -236,7 +236,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 5155453089
+              "duration": 6480614868
             },
             "embeddings": [
               {
@@ -253,29 +253,49 @@
             "arguments": [],
             "keyword": "Given ",
             "line": 7,
-            "name": "I click on registeration page",
+            "name": "I click on registration page",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:4"
+            },
             "result": {
-              "status": "undefined",
-              "duration": 0
-            }
+              "status": "passed",
+              "duration": 775922072
+            },
+            "embeddings": [
+              {
+                "data": "Q2xpY2tpbmcgb24gcmVnaXN0cmF0aW9uIGxpbms=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gcmVnaXN0cmF0aW9uIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
           },
           {
             "arguments": [],
             "keyword": "When ",
             "line": 8,
             "name": "I enter valid registration details",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:11"
+            },
             "result": {
-              "status": "undefined",
-              "duration": 0
+              "status": "failed",
+              "duration": 30241340649,
+              "error_message": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Password', exact: true })\u001b[22m\n\n    at World.<anonymous> (/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:22:74)"
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 9,
-            "name": "I submit the registration form",
+            "name": "I click the register button",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:26"
+            },
             "result": {
-              "status": "undefined",
+              "status": "skipped",
               "duration": 0
             }
           },
@@ -283,9 +303,38 @@
             "arguments": [],
             "keyword": "Then ",
             "line": 10,
-            "name": "I should see a confirmation message indicating successful registration",
+            "name": "I should see a successful registration message",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:30"
+            },
             "result": {
-              "status": "undefined",
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 11,
+            "name": "I should be logged in automatically after registration",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:36"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "I should see the logout option in the menu after registration",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:41"
+            },
+            "result": {
+              "status": "skipped",
               "duration": 0
             }
           },
@@ -294,7 +343,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 30891450
+              "duration": 49964704
             }
           }
         ],
@@ -305,7 +354,7 @@
         "description": "",
         "id": "registration-functionality;unsuccessful-registration-with-existing-email",
         "keyword": "Scenario",
-        "line": 12,
+        "line": 14,
         "name": "Unsuccessful registration with existing email",
         "steps": [
           {
@@ -313,7 +362,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 4960249561
+              "duration": 6450112637
             },
             "embeddings": [
               {
@@ -329,40 +378,63 @@
           {
             "arguments": [],
             "keyword": "Given ",
-            "line": 13,
-            "name": "I click on registeration page",
+            "line": 15,
+            "name": "I click on registration page",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:4"
+            },
             "result": {
-              "status": "undefined",
-              "duration": 0
-            }
+              "status": "passed",
+              "duration": 760711404
+            },
+            "embeddings": [
+              {
+                "data": "Q2xpY2tpbmcgb24gcmVnaXN0cmF0aW9uIGxpbms=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gcmVnaXN0cmF0aW9uIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 14,
+            "line": 16,
             "name": "I enter registration details with an existing email",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:52"
+            },
             "result": {
-              "status": "undefined",
-              "duration": 0
+              "status": "failed",
+              "duration": 30265549859,
+              "error_message": "locator.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Password', exact: true })\u001b[22m\n\n    at World.<anonymous> (/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:62:74)"
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 15,
-            "name": "I submit the registration form",
+            "line": 17,
+            "name": "I click the register button",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:26"
+            },
             "result": {
-              "status": "undefined",
+              "status": "skipped",
               "duration": 0
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 16,
-            "name": "I should see an error message indicating the email is already in use",
+            "line": 18,
+            "name": "I enter registration details with an existing email",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:52"
+            },
             "result": {
-              "status": "undefined",
+              "status": "skipped",
               "duration": 0
             }
           },
@@ -371,7 +443,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 29564527
+              "duration": 51362059
             }
           }
         ],
