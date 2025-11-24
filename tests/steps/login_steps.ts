@@ -32,4 +32,13 @@ When('I click the login button', async function () {
 Then('I should see my username displayed on the page', async function () {
   await expect(this.page.locator('.header-links .account')).toHaveText(this.email);
 });
-       
+
+Then('I should see the logout option in the menu', async function () {
+  await expect(this.page.getByRole('link', { name: 'Log out' })).toBeVisible();
+});
+
+Then('I should see an error message indicating invalid login', async function () {
+  const errorMessage = this.page.locator('.message-error .validation-summary-errors');
+  await expect(errorMessage).toBeVisible();
+  await expect(errorMessage).toHaveText(/The credentials provided are incorrect/);
+});

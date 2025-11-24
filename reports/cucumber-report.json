@@ -1,0 +1,138 @@
+[
+  {
+    "description": "    As a registered user\n    I want to log in to the application\n    So that I can access my account and personalized features",
+    "elements": [
+      {
+        "description": "",
+        "id": "login-functionality;successful-login-with-valid-credentials",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Successful login with valid credentials",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 1277473363
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "I am on the home page",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4295361708
+            },
+            "embeddings": [
+              {
+                "data": "TmF2aWdhdGluZyB0byBob21lIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gaG9tZSBwYWdl",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "I click the login link",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:13"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 626058664
+            },
+            "embeddings": [
+              {
+                "data": "Q2xpY2tpbmcgb24gbG9naW4gbGluaw==",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gbG9naW4gcGFnZQ==",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 9,
+            "name": "I enter email as \"animesh213123@email.com\" and password \"Welcome@1\"",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 39755120
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "I click the login button",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 945550392
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "I should see my username displayed on the page",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49351781
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "I should see the logout option in the menu",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 173052767
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 208732974
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "login-functionality",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Login Functionality",
+    "tags": [],
+    "uri": "tests/features/login_features/login.feature"
+  }
+]
