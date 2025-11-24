@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1277473363
+              "duration": 2718048391
             }
           },
           {
@@ -27,7 +27,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 4295361708
+              "duration": 4505145947
             },
             "embeddings": [
               {
@@ -50,7 +50,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 626058664
+              "duration": 789188831
             },
             "embeddings": [
               {
@@ -73,7 +73,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 39755120
+              "duration": 129353655
             }
           },
           {
@@ -86,7 +86,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 945550392
+              "duration": 959549827
             }
           },
           {
@@ -99,7 +99,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 49351781
+              "duration": 164158595
             }
           },
           {
@@ -112,7 +112,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 173052767
+              "duration": 81638261
             }
           },
           {
@@ -120,7 +120,116 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 208732974
+              "duration": 38417639
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "login-functionality;unsuccessful-login-with-invalid-credentials",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Unsuccessful login with invalid credentials",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 2680754183
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "I am on the home page",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4543317517
+            },
+            "embeddings": [
+              {
+                "data": "TmF2aWdhdGluZyB0byBob21lIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gaG9tZSBwYWdl",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "I click the login link",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:13"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 793890112
+            },
+            "embeddings": [
+              {
+                "data": "Q2xpY2tpbmcgb24gbG9naW4gbGluaw==",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gbG9naW4gcGFnZQ==",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 17,
+            "name": "I enter email as \"invalid@email.com\" and password \"WrongPassword\"",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 124317707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "I click the login button",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 542563093
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 19,
+            "name": "I should see an error message indicating invalid credentials",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 367979739
             }
           }
         ],

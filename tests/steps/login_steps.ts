@@ -37,7 +37,7 @@ Then('I should see the logout option in the menu', async function () {
   await expect(this.page.getByRole('link', { name: 'Log out' })).toBeVisible();
 });
 
-Then('I should see an error message indicating invalid login', async function () {
+Then('I should see an error message indicating invalid credentials', async function () {
   const errorMessage = this.page.locator('.message-error .validation-summary-errors');
   await expect(errorMessage).toBeVisible();
   await expect(errorMessage).toHaveText(/The credentials provided are incorrect/);
