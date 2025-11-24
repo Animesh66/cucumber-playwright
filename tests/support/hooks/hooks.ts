@@ -1,5 +1,6 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
-import { chromium, Browser, Page } from "playwright";
+import { chromium, Browser } from "playwright";
+import { expect } from "@playwright/test";
 
 let browser: Browser;
 
@@ -13,6 +14,10 @@ AfterAll(async () => {
 
 Before(async function () {
   this.page = await browser.newPage();
+  this.log('Navigating to home page');
+  await this.page.goto('https://demowebshop.tricentis.com/');
+  await expect(this.page).toHaveTitle('Demo Web Shop');
+  this.log('On home page');
 });
 
 After(async function () {

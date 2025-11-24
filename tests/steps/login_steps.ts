@@ -1,14 +1,7 @@
 import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
-setDefaultTimeout(120 * 1000);
-
-Given('I am on the home page', async function () {
-  this.log('Navigating to home page');
-  await this.page.goto('https://demowebshop.tricentis.com/');
-  await expect(this.page).toHaveTitle('Demo Web Shop');
-  this.log('On home page');
-});
+setDefaultTimeout(120000); // setting the default timeout to 120 seconds
 
 Given('I click the login link', async function () {
   this.log('Clicking on login link');
