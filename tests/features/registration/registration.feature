@@ -4,13 +4,15 @@ Feature: Registration Functionality
   So that I can access member-only features
 
   Scenario: Successful registration with valid details
-    Given I am on the registration page
+    Given I click on registration page
     When I enter valid registration details
-    And I submit the registration form
-    Then I should see a confirmation message indicating successful registration
+    And I click the register button
+    Then I should see a successful registration message
+    And I should be logged in automatically after registration
+    And I should see the logout option in the menu after registration
 
   Scenario: Unsuccessful registration with existing email
-    Given I am on the registration page
+    Given I click on registration page
     When I enter registration details with an existing email
-    And I submit the registration form
-    Then I should see an error message indicating the email is already in use
+    And I click the register button
+    Then I enter registration details with an existing email

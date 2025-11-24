@@ -14,20 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1220410887
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 7,
-            "name": "I am on the home page",
-            "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 4566968136
+              "duration": 8235149760
             },
             "embeddings": [
               {
@@ -42,15 +29,15 @@
           },
           {
             "arguments": [],
-            "keyword": "And ",
-            "line": 8,
+            "keyword": "Given ",
+            "line": 7,
             "name": "I click the login link",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:13"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
             },
             "result": {
               "status": "passed",
-              "duration": 640223621
+              "duration": 736824355
             },
             "embeddings": [
               {
@@ -66,53 +53,53 @@
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 9,
+            "line": 8,
             "name": "I enter email as \"animesh213123@email.com\" and password \"Welcome@1\"",
+            "match": {
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40530138
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "I click the login button",
             "match": {
               "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
             },
             "result": {
               "status": "passed",
-              "duration": 40938958
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 10,
-            "name": "I click the login button",
-            "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:28"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 959216250
+              "duration": 993998881
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 11,
+            "line": 10,
             "name": "I should see my username displayed on the page",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:32"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:25"
             },
             "result": {
               "status": "passed",
-              "duration": 57408666
+              "duration": 44773575
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 12,
+            "line": 11,
             "name": "I should see the logout option in the menu",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:36"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:29"
             },
             "result": {
               "status": "passed",
-              "duration": 10316402
+              "duration": 13398361
             }
           },
           {
@@ -120,7 +107,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 42713082
+              "duration": 38489530
             }
           }
         ],
@@ -131,7 +118,7 @@
         "description": "",
         "id": "login-functionality;unsuccessful-login-with-invalid-credentials",
         "keyword": "Scenario",
-        "line": 14,
+        "line": 13,
         "name": "Unsuccessful login with invalid credentials",
         "steps": [
           {
@@ -139,20 +126,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1211197582
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 15,
-            "name": "I am on the home page",
-            "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 4020539834
+              "duration": 9189361028
             },
             "embeddings": [
               {
@@ -167,15 +141,15 @@
           },
           {
             "arguments": [],
-            "keyword": "And ",
-            "line": 16,
+            "keyword": "Given ",
+            "line": 14,
             "name": "I click the login link",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:13"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
             },
             "result": {
               "status": "passed",
-              "duration": 654003011
+              "duration": 585228610
             },
             "embeddings": [
               {
@@ -191,40 +165,40 @@
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 17,
+            "line": 15,
             "name": "I enter email as \"invalid@email.com\" and password \"WrongPassword\"",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:14"
             },
             "result": {
               "status": "passed",
-              "duration": 54706242
+              "duration": 40825402
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "line": 18,
+            "line": 16,
             "name": "I click the login button",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:28"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
             },
             "result": {
               "status": "passed",
-              "duration": 563343269
+              "duration": 569006923
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 19,
+            "line": 17,
             "name": "I should see an error message indicating invalid credentials",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:40"
+              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:33"
             },
             "result": {
               "status": "passed",
-              "duration": 86794260
+              "duration": 89469911
             }
           },
           {
@@ -232,7 +206,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 36232591
+              "duration": 41286624
             }
           }
         ],
@@ -245,6 +219,171 @@
     "keyword": "Feature",
     "name": "Login Functionality",
     "tags": [],
-    "uri": "tests/features/login_features/login.feature"
+    "uri": "tests/features/login/login.feature"
+  },
+  {
+    "description": "  As a new user\n  I want to register an account on the website\n  So that I can access member-only features",
+    "elements": [
+      {
+        "description": "",
+        "id": "registration-functionality;successful-registration-with-valid-details",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Successful registration with valid details",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 5155453089
+            },
+            "embeddings": [
+              {
+                "data": "TmF2aWdhdGluZyB0byBob21lIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gaG9tZSBwYWdl",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "I click on registeration page",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "I enter valid registration details",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "I submit the registration form",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 10,
+            "name": "I should see a confirmation message indicating successful registration",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 30891450
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-functionality;unsuccessful-registration-with-existing-email",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Unsuccessful registration with existing email",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 4960249561
+            },
+            "embeddings": [
+              {
+                "data": "TmF2aWdhdGluZyB0byBob21lIHBhZ2U=",
+                "mime_type": "text/x.cucumber.log+plain"
+              },
+              {
+                "data": "T24gaG9tZSBwYWdl",
+                "mime_type": "text/x.cucumber.log+plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "I click on registeration page",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "I enter registration details with an existing email",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "I submit the registration form",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 16,
+            "name": "I should see an error message indicating the email is already in use",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 29564527
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "registration-functionality",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Registration Functionality",
+    "tags": [],
+    "uri": "tests/features/registration/registration.feature"
   }
 ]
