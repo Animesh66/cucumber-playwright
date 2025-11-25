@@ -1,10 +1,11 @@
 import { Given, When, Then } from '@cucumber/cucumber';
-import { expect } from '@playwright/test';
+import { RegistrationPage } from '../pages/RegistrationPage';
 
 Given('I click on registration page', async function () {  
   this.log('Clicking on registration link');
-  await this.page.getByRole('link', { name: 'Register' }).click();
-  await expect(this.page).toHaveTitle(/Register/);
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.clickRegistrationLink();
+  await registrationPage.verifyRegistrationPageTitle();
   this.log('On registration page');
 });
 
@@ -15,38 +16,33 @@ When('I enter valid registration details', async function () {
   this.email = `testuser${timestamp}@example.com`;
   this.password   = 'Test@1234';
 
-  await this.page.getByRole('radio', { name:'Male', exact: true  }).check();  
-  await this.page.getByRole('textbox', { name:'First Name' }).fill(this.firstName);
-  await this.page.getByRole('textbox', { name:'Last Name' }).fill(this.lastName);
-  await this.page.getByRole('textbox', { name:'Email' }).fill(this.email);
-  await this.page.getByRole('textbox', { name: 'Password:', exact: true }).fill(this.password);
-  await this.page.getByRole('textbox', { name:'Confirm Password:'}).fill(this.password);
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.fillRegistrationForm(this.firstName, this.lastName, this.email, this.password);
 }   );
 
 When('I click the register button', async function () {
-  await this.page.getByRole('button', { name: 'Register' }).click();
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.clickRegisterButton();
 });
 
 Then('I should see a successful registration message', async function () {
-  const successMessage = this.page.locator('.result');
-  await expect(successMessage).toBeVisible();
-  await expect(successMessage).toHaveText('Your registration completed');
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.verifySuccessMessage();
 });
 
 Then('I should be logged in automatically after registration', async function () {
-  const accountLink = this.page.getByRole('link', { name: this.email });
-  await expect(accountLink).toBeVisible();
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.verifyLoggedInWithEmail(this.email);
 });
 
 Then('I should see the logout option in the menu after registration', async function () {
-  const logoutLink = this.page.getByRole('link', { name: 'Log out' });
-  await expect(logoutLink).toBeVisible();
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.verifyLogoutOptionVisible();
 });
 
 Then('I should not be able to register with an already used email', async function () {
-  const errorMessage = this.page.locator('.message-error .validation-summary-errors');
-  await expect(errorMessage).toBeVisible();
-  await expect(errorMessage).toHaveText(/The specified email already exists/);
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.verifyDuplicateEmailError();
 });
 
 When('I enter registration details with an existing email', async function () {
@@ -55,10 +51,6 @@ When('I enter registration details with an existing email', async function () {
   this.email = 'animesh213123@email.com';
   this.password = 'Test@1234';
 
-  await this.page.getByRole('radio', { name:'Male', exact: true  }).check(); 
-  await this.page.getByRole('textbox', { name:'First Name' }).fill(this.firstName);
-  await this.page.getByRole('textbox', { name:'Last Name' }).fill(this.lastName);
-  await this.page.getByRole('textbox', { name:'Email' }).fill(this.email);
-  await this.page.getByRole('textbox', { name: 'Password:', exact: true }).fill(this.password);
-  await this.page.getByRole('textbox', { name:'Confirm Password:'}).fill(this.password);
+  const registrationPage = new RegistrationPage(this.page);
+  await registrationPage.fillRegistrationForm(this.firstName, this.lastName, this.email, this.password);
 });
