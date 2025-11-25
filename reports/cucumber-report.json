@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 71842425071
+              "duration": 47174034032
             },
             "embeddings": [
               {
@@ -33,11 +33,11 @@
             "line": 7,
             "name": "I click the login link",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
+              "location": "tests/steps/login_steps.ts:6"
             },
             "result": {
               "status": "passed",
-              "duration": 5941953687
+              "duration": 5826674280
             },
             "embeddings": [
               {
@@ -56,11 +56,11 @@
             "line": 8,
             "name": "I enter email as \"animesh213123@email.com\" and password \"Welcome@1\"",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:14"
+              "location": "tests/steps/login_steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 2059372946
+              "duration": 2417548339
             }
           },
           {
@@ -69,11 +69,11 @@
             "line": 9,
             "name": "I click the login button",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
+              "location": "tests/steps/login_steps.ts:23"
             },
             "result": {
               "status": "passed",
-              "duration": 3068763997
+              "duration": 2813252454
             }
           },
           {
@@ -82,11 +82,11 @@
             "line": 10,
             "name": "I should see my username displayed on the page",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:25"
+              "location": "tests/steps/login_steps.ts:28"
             },
             "result": {
               "status": "passed",
-              "duration": 75370819
+              "duration": 123125977
             }
           },
           {
@@ -95,11 +95,11 @@
             "line": 11,
             "name": "I should see the logout option in the menu",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:29"
+              "location": "tests/steps/login_steps.ts:33"
             },
             "result": {
               "status": "passed",
-              "duration": 64206333
+              "duration": 49756815
             }
           },
           {
@@ -107,7 +107,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1183374211
+              "duration": 1679504237
             }
           }
         ],
@@ -126,7 +126,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 71844781841
+              "duration": 47173800393
             },
             "embeddings": [
               {
@@ -145,11 +145,11 @@
             "line": 14,
             "name": "I click the login link",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:6"
+              "location": "tests/steps/login_steps.ts:6"
             },
             "result": {
               "status": "passed",
-              "duration": 5941135653
+              "duration": 5826189303
             },
             "embeddings": [
               {
@@ -168,11 +168,11 @@
             "line": 15,
             "name": "I enter email as \"invalid@email.com\" and password \"WrongPassword\"",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:14"
+              "location": "tests/steps/login_steps.ts:15"
             },
             "result": {
               "status": "passed",
-              "duration": 2058513725
+              "duration": 2418309904
             }
           },
           {
@@ -181,11 +181,11 @@
             "line": 16,
             "name": "I click the login button",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:21"
+              "location": "tests/steps/login_steps.ts:23"
             },
             "result": {
               "status": "passed",
-              "duration": 2061480458
+              "duration": 1397063647
             }
           },
           {
@@ -194,11 +194,11 @@
             "line": 17,
             "name": "I should see an error message indicating invalid credentials",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/login_steps.ts:33"
+              "location": "tests/steps/login_steps.ts:38"
             },
             "result": {
               "status": "passed",
-              "duration": 604103088
+              "duration": 1002150900
             }
           },
           {
@@ -206,7 +206,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1717230941
+              "duration": 2274535864
             }
           }
         ],
@@ -236,7 +236,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 6723915547
+              "duration": 6534803585
             },
             "embeddings": [
               {
@@ -255,11 +255,11 @@
             "line": 7,
             "name": "I click on registration page",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:4"
+              "location": "tests/steps/registration_steps.ts:4"
             },
             "result": {
               "status": "passed",
-              "duration": 1032354013
+              "duration": 961655948
             },
             "embeddings": [
               {
@@ -278,11 +278,11 @@
             "line": 8,
             "name": "I enter valid registration details",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:11"
+              "location": "tests/steps/registration_steps.ts:12"
             },
             "result": {
               "status": "passed",
-              "duration": 587191242
+              "duration": 893669180
             }
           },
           {
@@ -291,11 +291,11 @@
             "line": 9,
             "name": "I click the register button",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:26"
+              "location": "tests/steps/registration_steps.ts:23"
             },
             "result": {
               "status": "passed",
-              "duration": 1690132260
+              "duration": 1646189339
             }
           },
           {
@@ -304,11 +304,11 @@
             "line": 10,
             "name": "I should see a successful registration message",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:30"
+              "location": "tests/steps/registration_steps.ts:28"
             },
             "result": {
               "status": "passed",
-              "duration": 56978094
+              "duration": 291604055
             }
           },
           {
@@ -317,11 +317,11 @@
             "line": 11,
             "name": "I should be logged in automatically after registration",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:36"
+              "location": "tests/steps/registration_steps.ts:33"
             },
             "result": {
               "status": "passed",
-              "duration": 7841205
+              "duration": 7249632
             }
           },
           {
@@ -330,11 +330,11 @@
             "line": 12,
             "name": "I should see the logout option in the menu after registration",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:41"
+              "location": "tests/steps/registration_steps.ts:38"
             },
             "result": {
               "status": "passed",
-              "duration": 7147060
+              "duration": 6352043
             }
           },
           {
@@ -342,7 +342,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 512680017
+              "duration": 246773403
             }
           }
         ],
@@ -361,7 +361,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 5703574095
+              "duration": 6493773520
             },
             "embeddings": [
               {
@@ -380,11 +380,11 @@
             "line": 15,
             "name": "I click on registration page",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:4"
+              "location": "tests/steps/registration_steps.ts:4"
             },
             "result": {
               "status": "passed",
-              "duration": 1050120992
+              "duration": 949891127
             },
             "embeddings": [
               {
@@ -403,11 +403,11 @@
             "line": 16,
             "name": "I enter registration details with an existing email",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:52"
+              "location": "tests/steps/registration_steps.ts:48"
             },
             "result": {
               "status": "passed",
-              "duration": 650332253
+              "duration": 449967042
             }
           },
           {
@@ -416,11 +416,11 @@
             "line": 17,
             "name": "I click the register button",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:26"
+              "location": "tests/steps/registration_steps.ts:23"
             },
             "result": {
               "status": "passed",
-              "duration": 1215988030
+              "duration": 1179560050
             }
           },
           {
@@ -429,11 +429,11 @@
             "line": 18,
             "name": "I enter registration details with an existing email",
             "match": {
-              "location": "file:/Users/animeshmukherjee/Desktop/Codebase/cucumber-playwright/tests/steps/registration_steps.ts:52"
+              "location": "tests/steps/registration_steps.ts:48"
             },
             "result": {
               "status": "passed",
-              "duration": 312546990
+              "duration": 453149581
             }
           },
           {
@@ -441,7 +441,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 378017072
+              "duration": 40152738
             }
           }
         ],
