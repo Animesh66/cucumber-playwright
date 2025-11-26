@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js test"
+    "test": "cucumber-js test",
+    "test:chromium": "BROWSER=chromium cucumber-js test",
+    "test:firefox": "BROWSER=firefox cucumber-js test",
+    "test:webkit": "BROWSER=webkit cucumber-js test"
   },
   "keywords": [],
   "author": "",

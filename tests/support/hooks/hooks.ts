@@ -1,18 +1,17 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
-import { chromium, Browser } from "playwright";
 import { expect } from "@playwright/test";
-
-let browser: Browser;
+import { BrowserManager } from "../helpers/browserManager";
 
 BeforeAll(async () => {
-  browser = await chromium.launch({ headless: false });
+  await BrowserManager.launchBrowser(false);
 });
 
 AfterAll(async () => {
-  await browser.close();
+  await BrowserManager.closeBrowser();
 });
 
 Before(async function () {
+  const browser = BrowserManager.getBrowser();
   this.page = await browser.newPage();
   this.log('Navigating to home page');
   await this.page.goto('https://demowebshop.tricentis.com/');
