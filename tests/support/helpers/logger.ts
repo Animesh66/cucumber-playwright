@@ -26,12 +26,15 @@ const Colors = {
 };
 
 export class Logger {
-  private static instance: Logger;
+  private static instances: Map<string, Logger> = new Map();
   private logLevel: LogLevel;
   private logFilePath: string;
   private logStream: fs.WriteStream | null = null;
+  private workerId: string;
 
-  private constructor() {
+  private constructor(workerId: string) {
+    this.workerId = workerId;
+    
     // Get log level from environment variable, default to INFO
     const envLogLevel = process.env.LOG_LEVEL?.toUpperCase() || 'INFO';
     this.logLevel = LogLevel[envLogLevel as keyof typeof LogLevel] ?? LogLevel.INFO;
@@ -42,19 +45,22 @@ export class Logger {
       fs.mkdirSync(logDir, { recursive: true });
     }
 
-    // Create log file with timestamp
+    // Create log file with timestamp and worker ID
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
-    this.logFilePath = path.join(logDir, `test-${timestamp}.log`);
+    this.logFilePath = path.join(logDir, `test-${timestamp}-worker-${workerId}.log`);
     
     // Create write stream for the log file
     this.logStream = fs.createWriteStream(this.logFilePath, { flags: 'a' });
   }
 
-  public static getInstance(): Logger {
-    if (!Logger.instance) {
-      Logger.instance = new Logger();
+  public static getInstance(workerId?: string): Logger {
+    // Use process ID as worker identifier if not provided
+    const id = workerId || process.pid.toString();
+    
+    if (!Logger.instances.has(id)) {
+      Logger.instances.set(id, new Logger(id));
     }
-    return Logger.instance;
+    return Logger.instances.get(id)!;
   }
 
   private getColorForLevel(levelName: string): string {
@@ -79,7 +85,7 @@ export class Logger {
     const color = colorize ? this.getColorForLevel(level) : '';
     const reset = colorize ? Colors.Reset : '';
     
-    let logMessage = `${color}[${timestamp}] [${level}]${reset} ${message}`;
+    let logMessage = `${color}[${timestamp}] [Worker-${this.workerId}] [${level}]${reset} ${message}`;
     
     if (data !== undefined) {
       if (typeof data === 'object') {
@@ -130,7 +136,8 @@ export class Logger {
     const separator = '='.repeat(80);
     const startMarker = '--- START OF SCENARIO ---';
     const browserInfo = browser ? ` [Browser: ${browser.toUpperCase()}]` : '';
-    const scenarioHeader = `Scenario: ${scenarioName}${browserInfo}`;
+    const workerInfo = `[Worker-${this.workerId}]`;
+    const scenarioHeader = `Scenario: ${scenarioName}${browserInfo} ${workerInfo}`;
     
     const logContent = `\n${separator}\n${startMarker}\n${scenarioHeader}\n${separator}\n`;
     
@@ -147,7 +154,8 @@ export class Logger {
     const separator = '='.repeat(80);
     const endMarker = '--- END OF SCENARIO ---';
     const browserInfo = browser ? ` [Browser: ${browser.toUpperCase()}]` : '';
-    const scenarioFooter = `Scenario: ${scenarioName}${browserInfo} | Status: ${status}`;
+    const workerInfo = `[Worker-${this.workerId}]`;
+    const scenarioFooter = `Scenario: ${scenarioName}${browserInfo} ${workerInfo} | Status: ${status}`;
     
     const logContent = `${separator}\n${scenarioFooter}\n${endMarker}\n${separator}\n`;
     
@@ -170,7 +178,14 @@ export class Logger {
   public getLogFilePath(): string {
     return this.logFilePath;
   }
+
+  public static closeAll(): void {
+    Logger.instances.forEach(instance => instance.close());
+    Logger.instances.clear();
+  }
 }
 
-// Export a singleton instance for easy import
-export const logger = Logger.getInstance();
+// Helper function to get logger instance for current worker
+export function getLogger(workerId?: string): Logger {
+  return Logger.getInstance(workerId);
+}

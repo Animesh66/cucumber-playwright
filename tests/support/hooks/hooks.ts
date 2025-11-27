@@ -1,7 +1,7 @@
 import { Before, After, BeforeAll, AfterAll } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { BrowserManager } from "../helpers/browserManager";
-import { logger } from "../helpers/logger";
+import { getLogger, Logger } from "../helpers/logger";
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -12,17 +12,22 @@ const BASE_URL = process.env.BASE_URL || 'https://demowebshop.tricentis.com/';
 
 BeforeAll(async () => {
   await BrowserManager.launchBrowser();
+  const logger = getLogger();
   logger.info(`Tests will run against: ${BASE_URL}`);
   logger.info(`Log file location: ${logger.getLogFilePath()}`);
 });
 
 AfterAll(async () => {
   await BrowserManager.closeBrowser();
+  const logger = getLogger();
   logger.info('Test execution completed');
-  logger.close();
+  Logger.closeAll();
 });
 
 Before(async function (scenario) {
+  // Get logger instance for this worker
+  const logger = getLogger();
+  
   // Get browser type from environment
   const browserType = (process.env.BROWSER || 'chromium').toLowerCase();
   
@@ -36,6 +41,7 @@ Before(async function (scenario) {
   
   this.page = await context.newPage();
   this.context = context;
+  this.logger = logger;
   
   logger.info('Navigating to home page');
   this.log('Navigating to home page');
@@ -46,6 +52,9 @@ Before(async function (scenario) {
 });
 
 After(async function (scenario) {
+  // Get logger from context
+  const logger = this.logger;
+  
   // Get browser type from environment
   const browserType = (process.env.BROWSER || 'chromium').toLowerCase();
   
