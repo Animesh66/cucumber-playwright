@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  cucumber-playwright-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cucumber-playwright-tests
+    environment:
+      - BROWSER=${BROWSER:-chromium}
+      - CI=true
+      - HEADLESS=true
+    volumes:
+      # Mount reports directory to access test results
+      - ./reports:/app/reports
+      # Mount logs directory
+      - ./logs:/app/logs
+    command: ${TEST_COMMAND:-npm run test}
+    networks:
+      - test-network
+
+  # Service for running tests with Chromium
+  test-chromium:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cucumber-chromium
+    environment:
+      - BROWSER=chromium
+      - CI=true
+      - HEADLESS=true
+    volumes:
+      - ./reports:/app/reports
+      - ./logs:/app/logs
+    command: npm run test:chromium
+    networks:
+      - test-network
+
+  # Service for running tests with Firefox
+  test-firefox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cucumber-firefox
+    environment:
+      - BROWSER=firefox
+      - CI=true
+      - HEADLESS=true
+    volumes:
+      - ./reports:/app/reports
+      - ./logs:/app/logs
+    command: npm run test:firefox
+    networks:
+      - test-network
+
+  # Service for running tests with WebKit
+  test-webkit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cucumber-webkit
+    environment:
+      - BROWSER=webkit
+      - CI=true
+      - HEADLESS=true
+    volumes:
+      - ./reports:/app/reports
+      - ./logs:/app/logs
+    command: npm run test:webkit
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

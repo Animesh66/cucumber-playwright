@@ -11,8 +11,13 @@ A comprehensive BDD (Behavior-Driven Development) test automation framework buil
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Running Tests](#running-tests)
+- [Docker Setup](#-docker-commands-reference)
 - [Test Reports](#test-reports)
 - [Framework Architecture](#framework-architecture)
+
+**📖 Detailed Documentation:**
+- [Docker Quick Start](./DOCKER-QUICKSTART.md) - Get started with Docker in 5 minutes
+- [Docker Setup Guide](./DOCKER.md) - Comprehensive Docker configuration and usage
 
 ## 🎯 Framework Overview
 
@@ -33,6 +38,8 @@ This framework combines the power of:
 - ✅ **Rerun Failed Tests** - Track and rerun failed scenarios
 - ✅ **Type Safety** - Full TypeScript support
 - ✅ **Detailed Logging** - Console logs for debugging and monitoring
+- ✅ **Docker Support** - Fully containerized with Docker and Docker Compose
+- ✅ **CI/CD Ready** - Easy integration with GitHub Actions, GitLab CI, Jenkins, etc.
 
 ## 📁 Project Structure
 
@@ -68,11 +75,18 @@ cucumber-playwright/
 
 ## 🔧 Prerequisites
 
+### Option 1: Local Installation
 - **Node.js** - Version 16.x or higher
 - **npm** - Version 7.x or higher
 - **Git** - For cloning the repository
 
+### Option 2: Docker Installation (Recommended)
+- **Docker** - Version 20.x or higher
+- **Docker Compose** - Version 2.x or higher
+
 ## 📦 Installation
+
+### Local Installation
 
 1. **Clone the repository**
    ```bash
@@ -89,6 +103,21 @@ cucumber-playwright/
    ```bash
    npx playwright install
    ```
+
+### Docker Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd cucumber-playwright
+   ```
+
+2. **Build the Docker image**
+   ```bash
+   docker-compose build
+   ```
+
+That's it! All dependencies and browsers are included in the Docker image.
 
 ## ⚙️ Configuration
 
@@ -121,14 +150,16 @@ HEADLESS=false
 
 ## 🚀 Running Tests
 
-### Basic Execution
+### Local Execution
+
+#### Basic Execution
 
 ```bash
 # Run all tests with default configuration (Chromium, 2 threads)
 npm test
 ```
 
-### Browser-Specific Execution
+#### Browser-Specific Execution
 
 ```bash
 # Run tests on Chromium
@@ -139,6 +170,58 @@ npm run test:firefox
 
 # Run tests on WebKit (Safari)
 npm run test:webkit
+```
+
+### Docker Execution 🐳
+
+#### Using Docker Compose (Recommended)
+
+```bash
+# Run tests with default configuration (Chromium)
+docker-compose up cucumber-playwright-tests
+
+# Run tests on specific browser
+docker-compose up test-chromium
+docker-compose up test-firefox
+docker-compose up test-webkit
+
+# Run tests in detached mode
+docker-compose up -d test-chromium
+
+# Clean up containers after execution
+docker-compose down
+```
+
+#### Using Docker directly
+
+```bash
+# Build the image
+docker build -t cucumber-playwright .
+
+# Run tests with default configuration
+docker run --rm -v $(pwd)/reports:/app/reports cucumber-playwright
+
+# Run tests on specific browser
+docker run --rm -v $(pwd)/reports:/app/reports \
+  -e BROWSER=firefox \
+  cucumber-playwright npm run test:firefox
+
+# Run with custom command
+docker run --rm -v $(pwd)/reports:/app/reports \
+  cucumber-playwright npm run test
+```
+
+#### Docker Environment Variables
+
+```bash
+# Run with custom environment variables
+docker-compose run -e BROWSER=webkit -e HEADLESS=true cucumber-playwright-tests
+
+# Run with multiple overrides
+docker-compose run \
+  -e BROWSER=chromium \
+  -e CI=true \
+  cucumber-playwright-tests npm run test:chromium
 ```
 
 ### Custom Configuration via CLI
@@ -283,12 +366,117 @@ Cucumber hooks manage test lifecycle:
 5. **AfterAll Hook**: Browser instance closed
 6. **Reports Generated**: HTML and JSON reports created
 
+## 🐳 Docker Commands Reference
+
+### Building and Managing Containers
+
+```bash
+# Build/rebuild the Docker image
+docker-compose build
+
+# Build without cache (fresh build)
+docker-compose build --no-cache
+
+# View running containers
+docker ps
+
+# View all containers (including stopped)
+docker ps -a
+
+# Stop running containers
+docker-compose stop
+
+# Remove containers
+docker-compose down
+
+# Remove containers and volumes
+docker-compose down -v
+
+# View container logs
+docker-compose logs cucumber-playwright-tests
+
+# Follow logs in real-time
+docker-compose logs -f cucumber-playwright-tests
+```
+
+### Accessing Reports
+
+After running tests in Docker, reports are automatically saved to your local `./reports` directory through volume mounting:
+
+```bash
+# View reports after Docker execution
+open reports/index.html  # macOS
+xdg-open reports/index.html  # Linux
+start reports/index.html  # Windows
+```
+
+### Using Makefile (Simplified Commands)
+
+For easier Docker management, use the provided Makefile:
+
+```bash
+# View all available commands
+make help
+
+# Build Docker image
+make build
+
+# Run all tests
+make test
+
+# Run browser-specific tests
+make test-chromium
+make test-firefox
+make test-webkit
+
+# View logs
+make logs
+
+# Access container shell for debugging
+make shell
+
+# Clean up everything
+make clean
+
+# Rebuild from scratch
+make rebuild
+```
+
+### Advanced Docker Usage
+
+```bash
+# Run tests and automatically remove container
+docker run --rm cucumber-playwright
+
+# Run with interactive terminal
+docker run -it cucumber-playwright /bin/bash
+
+# Execute commands in running container
+docker exec -it cucumber-playwright-tests npm run test
+
+# Copy files from container
+docker cp cucumber-playwright-tests:/app/reports ./reports
+```
+
 ## 🐛 Debugging
 
-### Headed Mode
+### Local - Headed Mode
 Run tests with visible browser:
 ```bash
 HEADLESS=false npm test
+```
+
+### Docker - Debug Mode
+```bash
+# Access container shell for debugging
+docker-compose run cucumber-playwright-tests /bin/bash
+
+# Run specific test file
+docker-compose run cucumber-playwright-tests \
+  npx cucumber-js tests/features/login/login.feature
+
+# View detailed logs
+docker-compose logs --tail=100 cucumber-playwright-tests
 ```
 
 ### Console Logs
