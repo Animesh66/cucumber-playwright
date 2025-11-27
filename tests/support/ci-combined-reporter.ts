@@ -21,23 +21,24 @@ export class CICombinedReporter {
       // Ensure directories exist
       await fs.ensureDir(this.reportDir);
 
-      // Collect and merge all JSON reports with browser metadata
-      const mergedData = await this.collectAndMergeJsonReports();
+      // Create a separate directory for browser-specific JSON files
+      const jsonDir = path.join(this.reportDir, 'json');
+      await fs.ensureDir(jsonDir);
+
+      // Collect and copy all JSON reports with proper naming
+      const collectedBrowsers = await this.collectAndCopyJsonReports(jsonDir);
       
-      if (mergedData.length === 0) {
+      if (collectedBrowsers.length === 0) {
         console.error('No test reports found to merge.');
         return;
       }
-
-      // Write enriched JSON reports for each browser
-      await this.writeEnrichedJsonReports(mergedData);
 
       // Get browser metadata
       const browserMetadata = await this.getBrowserMetadata();
 
       // Generate the combined HTML report using multiple-cucumber-html-reporter
       report.generate({
-        jsonDir: this.reportDir,
+        jsonDir: jsonDir,
         reportPath: this.reportDir,
         reportName: 'Combined Cross-Browser Test Report',
         pageTitle: 'Cucumber Playwright - All Browsers Test Results',
@@ -84,11 +85,10 @@ export class CICombinedReporter {
   }
 
   /**
-   * Collect all JSON report files from downloaded artifacts and merge them
+   * Collect all JSON report files from downloaded artifacts and copy them to the json directory
    */
-  private static async collectAndMergeJsonReports(): Promise<any[]> {
-    const mergedData: any[] = [];
-    const processedFeatures = new Set<string>();
+  private static async collectAndCopyJsonReports(jsonDir: string): Promise<string[]> {
+    const collectedBrowsers: string[] = [];
 
     // Check in downloaded-reports directory (CI artifact structure)
     const downloadedDir = path.join(process.cwd(), 'downloaded-reports');
@@ -103,39 +103,23 @@ export class CICombinedReporter {
           path.join(this.reportDir, `${browser}`, 'cucumber-report.json')
         ];
 
-        let jsonData = null;
-        let jsonPath = '';
+        let sourceJsonPath = '';
 
         for (const jsonFile of possiblePaths) {
           if (fs.existsSync(jsonFile)) {
-            jsonPath = jsonFile;
-            jsonData = await fs.readJson(jsonFile);
+            sourceJsonPath = jsonFile;
             console.log(`  ✓ Found ${browser} report: ${jsonFile}`);
             break;
           }
         }
 
-        if (jsonData && Array.isArray(jsonData)) {
-          // Add browser metadata to each feature
-          jsonData.forEach((feature: any) => {
-            // Create unique feature identifier
-            const featureId = `${browser}-${feature.id || feature.name}`;
-            
-            if (!processedFeatures.has(featureId)) {
-              // Enrich feature with browser metadata
-              const enrichedFeature = {
-                ...feature,
-                metadata: [
-                  { name: 'Browser', value: browser.toUpperCase() },
-                  { name: 'Platform', value: process.platform },
-                  { name: 'Node Version', value: process.version }
-                ]
-              };
-              
-              mergedData.push(enrichedFeature);
-              processedFeatures.add(featureId);
-            }
-          });
+        if (sourceJsonPath) {
+          // Copy the JSON file with browser-specific naming
+          // The library uses filename patterns to determine browser info
+          const targetPath = path.join(jsonDir, `${browser}.cucumber.json`);
+          await fs.copy(sourceJsonPath, targetPath);
+          console.log(`  ✓ Copied ${browser} report to: ${targetPath}`);
+          collectedBrowsers.push(browser);
         } else {
           console.warn(`  ⚠ No valid report found for ${browser}`);
         }
@@ -144,35 +128,7 @@ export class CICombinedReporter {
       }
     }
 
-    return mergedData;
-  }
-
-  /**
-   * Write enriched JSON reports for multiple-cucumber-html-reporter
-   */
-  private static async writeEnrichedJsonReports(mergedData: any[]): Promise<void> {
-    // Group features by browser
-    const browserGroups = new Map<string, any[]>();
-
-    mergedData.forEach(feature => {
-      const browser = feature.metadata?.find((m: any) => m.name === 'Browser')?.value?.toLowerCase() || 'unknown';
-      if (!browserGroups.has(browser)) {
-        browserGroups.set(browser, []);
-      }
-      browserGroups.get(browser)?.push(feature);
-    });
-
-    // Write separate JSON files for each browser with enriched metadata
-    for (const [browser, features] of browserGroups.entries()) {
-      const browserJsonPath = path.join(this.reportDir, `${browser}-enriched.json`);
-      await fs.writeJson(browserJsonPath, features, { spaces: 2 });
-      console.log(`  ✓ Created enriched ${browser} report: ${browserJsonPath}`);
-    }
-
-    // Also write a combined JSON for reference
-    const combinedJsonPath = path.join(this.reportDir, 'all-browsers-combined.json');
-    await fs.writeJson(combinedJsonPath, mergedData, { spaces: 2 });
-    console.log(`  ✓ Created combined report: ${combinedJsonPath}`);
+    return collectedBrowsers;
   }
 
   /**
