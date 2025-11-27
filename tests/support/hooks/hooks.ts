@@ -29,7 +29,14 @@ Before(async function (scenario) {
   // Log scenario start with browser info
   logger.scenarioStart(scenario.pickle.name, browserType);
   const browser = BrowserManager.getBrowser();
-  this.page = await browser.newPage();
+  const context = await browser.newContext();
+  
+  // Start tracing for this scenario
+  await context.tracing.start({ screenshots: true, snapshots: true });
+  
+  this.page = await context.newPage();
+  this.context = context;
+  
   logger.info('Navigating to home page');
   this.log('Navigating to home page');
   await this.page.goto(BASE_URL);
@@ -39,13 +46,52 @@ Before(async function (scenario) {
 });
 
 After(async function (scenario) {
-  logger.debug('Closing page after test');
-  await this.page.close();
-  
   // Get browser type from environment
   const browserType = (process.env.BROWSER || 'chromium').toLowerCase();
   
+  // Check if scenario failed
+  const isFailed = scenario.result?.status === 'FAILED';
+  
+  if (isFailed) {
+    // Create screenshots directory if it doesn't exist
+    const fs = require('fs');
+    const path = require('path');
+    const screenshotDir = path.join(process.cwd(), 'screenshots');
+    const traceDir = path.join(process.cwd(), 'traces');
+    
+    if (!fs.existsSync(screenshotDir)) {
+      fs.mkdirSync(screenshotDir, { recursive: true });
+    }
+    if (!fs.existsSync(traceDir)) {
+      fs.mkdirSync(traceDir, { recursive: true });
+    }
+    
+    // Capture screenshot for failed scenario
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const sanitizedScenarioName = scenario.pickle.name.replace(/[^a-zA-Z0-9]/g, '_');
+    const screenshotPath = path.join(screenshotDir, `${sanitizedScenarioName}_${browserType}_${timestamp}.png`);
+    
+    await this.page.screenshot({ path: screenshotPath, fullPage: true });
+    logger.error(`Screenshot captured for failed scenario: ${screenshotPath}`);
+    
+    // Attach screenshot to Cucumber report
+    const screenshot = fs.readFileSync(screenshotPath);
+    this.attach(screenshot, 'image/png');
+    
+    // Stop tracing and save trace file
+    const tracePath = path.join(traceDir, `${sanitizedScenarioName}_${browserType}_${timestamp}.zip`);
+    await this.context.tracing.stop({ path: tracePath });
+    logger.error(`Trace captured for failed scenario: ${tracePath}`);
+  } else {
+    // Stop tracing without saving for passed tests
+    await this.context.tracing.stop();
+  }
+  
+  logger.debug('Closing page after test');
+  await this.page.close();
+  await this.context.close();
+  
   // Log scenario end with status and browser info
-  const status = scenario.result?.status === 'PASSED' ? 'PASSED' : 'FAILED';
+  const status = isFailed ? 'FAILED' : 'PASSED';
   logger.scenarioEnd(scenario.pickle.name, status, browserType);
 });

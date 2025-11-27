@@ -8,4 +8,6 @@ node_modules/
 /playwright/.auth/
 reports/
 logs/
+screenshots/
+traces/
 .env
