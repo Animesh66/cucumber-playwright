@@ -7,9 +7,11 @@ export class BrowserManager {
    * Launches the browser based on the BROWSER environment variable
    * Supported values: chromium, firefox, webkit
    * Default: chromium
+   * Headless mode can be controlled via HEADLESS environment variable
    */
-  static async launchBrowser(headless: boolean = false): Promise<Browser> {
+  static async launchBrowser(headless?: boolean): Promise<Browser> {
     const browserType = (process.env.BROWSER || 'chromium').toLowerCase();
+    const isHeadless = headless !== undefined ? headless : process.env.HEADLESS === 'true';
     let browserEngine: BrowserType;
 
     switch (browserType) {
@@ -25,8 +27,8 @@ export class BrowserManager {
         break;
     }
 
-    console.log(`Launching ${browserType} browser...`);
-    this.browser = await browserEngine.launch({ headless });
+    console.log(`Launching ${browserType} browser in ${isHeadless ? 'headless' : 'headed'} mode...`);
+    this.browser = await browserEngine.launch({ headless: isHeadless });
     return this.browser;
   }
 
@@ -39,6 +41,7 @@ export class BrowserManager {
 
   static async closeBrowser(): Promise<void> {
     if (this.browser) {
+      console.log(`Closing browser...`);
       await this.browser.close();
     }
   }

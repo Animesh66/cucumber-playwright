@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { BrowserManager } from "../helpers/browserManager";
 
 BeforeAll(async () => {
-  await BrowserManager.launchBrowser(false);
+  await BrowserManager.launchBrowser();
 });
 
 AfterAll(async () => {
