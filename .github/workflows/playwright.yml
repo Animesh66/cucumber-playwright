@@ -47,22 +47,74 @@ jobs:
         retention-days: 30
         if-no-files-found: warn
     
-    - name: Upload test reports
+    - name: Upload JSON reports for merge
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-reports-${{ matrix.browser }}
+        name: json-report-${{ matrix.browser }}
+        path: reports/cucumber-report.json
+        retention-days: 30
+        if-no-files-found: warn
+    
+    - name: Upload browser-specific HTML report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: browser-report-${{ matrix.browser }}
+        path: reports/${{ matrix.browser }}/
+        retention-days: 30
+        if-no-files-found: warn
+
+  merge-reports:
+    name: Merge All Browser Reports
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Download all JSON reports
+      uses: actions/download-artifact@v4
+      with:
+        pattern: json-report-*
+        path: downloaded-reports
+    
+    - name: Download all browser HTML reports
+      uses: actions/download-artifact@v4
+      with:
+        pattern: browser-report-*
+        path: reports
+    
+    - name: Generate unified CI report
+      run: npm run report:ci-combined
+    
+    - name: Upload combined test report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: combined-test-report
         path: reports/
         retention-days: 30
         if-no-files-found: warn
     
-    - name: Publish test report summary
+    - name: Publish combined report summary
       if: always()
       run: |
-        echo "## Test Report Summary - ${{ matrix.browser }}" >> $GITHUB_STEP_SUMMARY
-        echo "Test reports have been generated and uploaded as artifacts." >> $GITHUB_STEP_SUMMARY
+        echo "## 🧪 Combined Test Report Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### Available Reports:" >> $GITHUB_STEP_SUMMARY
-        echo "- HTML Report: Download the 'test-reports-${{ matrix.browser }}' artifact and open \`index.html\`" >> $GITHUB_STEP_SUMMARY
-        echo "- JSON Report: Available in \`cucumber-report.json\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Logs: Download the 'test-logs-${{ matrix.browser }}' artifact" >> $GITHUB_STEP_SUMMARY
+        echo "All browser test results have been combined into a single HTML report." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Download Report:" >> $GITHUB_STEP_SUMMARY
+        echo "- Download the **'combined-test-report'** artifact" >> $GITHUB_STEP_SUMMARY
+        echo "- Open \`index.html\` to view results for all browsers" >> $GITHUB_STEP_SUMMARY
+        echo "- Individual browser reports available in their respective folders" >> $GITHUB_STEP_SUMMARY

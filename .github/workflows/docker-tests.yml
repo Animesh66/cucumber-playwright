@@ -30,7 +30,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chromium-test-reports
-          path: reports/
+          path: reports/chromium/
+          retention-days: 30
+      
+      - name: Upload JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromium-json-report
+          path: reports/cucumber-report.json
           retention-days: 30
       
       - name: Upload logs
@@ -63,7 +71,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: firefox-test-reports
-          path: reports/
+          path: reports/firefox/
+          retention-days: 30
+      
+      - name: Upload JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-json-report
+          path: reports/cucumber-report.json
           retention-days: 30
       
       - name: Upload logs
@@ -96,7 +112,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: webkit-test-reports
-          path: reports/
+          path: reports/webkit/
+          retention-days: 30
+      
+      - name: Upload JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webkit-json-report
+          path: reports/cucumber-report.json
           retention-days: 30
       
       - name: Upload logs
@@ -107,21 +131,54 @@ jobs:
           path: logs/
           retention-days: 7
 
-  publish-report:
+  merge-reports:
+    name: Merge All Browser Reports
     needs: [test-chromium, test-firefox, test-webkit]
     runs-on: ubuntu-latest
     if: always()
     
     steps:
-      - name: Download all reports
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Download browser HTML reports
         uses: actions/download-artifact@v4
         with:
           pattern: '*-test-reports'
-          path: all-reports
+          path: reports
       
-      - name: Publish test report
+      - name: Download JSON reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-json-report'
+          path: downloaded-reports
+      
+      - name: Generate unified CI report
+        run: npm run report:ci-combined
+      
+      - name: Upload combined test report
         uses: actions/upload-artifact@v4
         with:
-          name: combined-test-reports
-          path: all-reports/
+          name: combined-test-report
+          path: reports/
           retention-days: 30
+      
+      - name: Publish combined report summary
+        run: |
+          echo "## 🧪 Combined Test Report Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All browser test results have been combined into a single HTML report." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Download Report:" >> $GITHUB_STEP_SUMMARY
+          echo "- Download the **'combined-test-report'** artifact" >> $GITHUB_STEP_SUMMARY
+          echo "- Open \`index.html\` to view results for all browsers in one place" >> $GITHUB_STEP_SUMMARY
+          echo "- Individual browser reports available in their respective folders" >> $GITHUB_STEP_SUMMARY

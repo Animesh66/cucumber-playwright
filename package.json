@@ -12,6 +12,7 @@
     "test:all-browsers": "npm run clean && npm run test:chromium && npm run test:firefox && npm run test:webkit && npm run report:combined",
     "report": "ts-node tests/support/reporter.ts",
     "report:combined": "ts-node tests/support/combined-reporter.ts",
+    "report:ci-combined": "ts-node tests/support/ci-combined-reporter.ts",
     "report:open": "npm run report && open reports/index.html"
   },
   "keywords": [],

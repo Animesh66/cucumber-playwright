@@ -303,6 +303,92 @@ npm run clean
 
 📖 **For detailed reporting documentation, see [REPORTING.md](./REPORTING.md)**
 
+## 🔄 CI/CD Integration
+
+The framework includes **automated CI/CD workflows** for GitHub Actions with **unified cross-browser reporting**.
+
+### GitHub Actions Workflows
+
+Two workflows are provided:
+
+#### 1. **playwright.yml** - Standard CI Tests
+Runs tests in parallel across all browsers and generates a **single combined HTML report** containing results from all browsers.
+
+```yaml
+# Triggers: push, pull_request, manual
+Jobs:
+  - test (matrix: chromium, firefox, webkit)
+  - merge-reports (combines all results)
+```
+
+**Artifacts Generated:**
+- `combined-test-report` - Single HTML report with all browser results
+- `test-logs-{browser}` - Individual browser logs
+- Browser-specific reports in subdirectories
+
+#### 2. **docker-tests.yml** - Docker-based CI Tests
+Runs tests in Docker containers with the same unified reporting.
+
+### Combined Report Features
+
+The **unified CI report** (`index.html`) includes:
+
+✅ **Overall Statistics**
+- Total passed/failed/skipped tests across all browsers
+- Overall success rate
+- Total features and scenarios
+
+✅ **Browser-Specific Sections**
+- Individual stats for each browser (Chromium, Firefox, WebKit)
+- Detailed feature and scenario breakdowns
+- Duration and success rate per browser
+
+✅ **Interactive Details**
+- Toggle feature details for each browser
+- Scenario-level status indicators
+- Beautiful, responsive design
+
+### Downloading CI Reports
+
+After a workflow run completes:
+
+1. Go to **Actions** tab in GitHub
+2. Click on the completed workflow run
+3. Scroll to **Artifacts** section
+4. Download **`combined-test-report`**
+5. Extract and open **`index.html`**
+
+You'll see all browser results in a single, comprehensive HTML report!
+
+### Local Multi-Browser Testing
+
+Run tests on all browsers locally:
+
+```bash
+# Local execution - generates combined report
+npm run test:all-browsers
+
+# Docker execution - individual browser tests
+docker compose up test-chromium test-firefox test-webkit
+```
+
+### CI Environment Variables
+
+The workflows automatically set:
+- `CI=true` - Enables CI mode (headless)
+- `BROWSER={chromium|firefox|webkit}` - Sets browser per job
+- `HEADLESS=true` - Forces headless execution
+
+### Customizing CI Workflows
+
+You can modify the workflows to:
+- Add more browsers
+- Change parallel execution settings
+- Adjust artifact retention periods
+- Add deployment steps for reports
+
+Example: Deploy reports to GitHub Pages after tests complete.
+
 ## 🏗️ Framework Architecture
 
 ### Page Object Model (POM)
