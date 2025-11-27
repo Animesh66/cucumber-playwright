@@ -7,7 +7,8 @@
     "test": "cucumber-js test",
     "test:chromium": "BROWSER=chromium cucumber-js test --parallel 3",
     "test:firefox": "BROWSER=firefox cucumber-js test --parallel 3",
-    "test:webkit": "BROWSER=webkit cucumber-js test --parallel 3"
+    "test:webkit": "BROWSER=webkit cucumber-js test --parallel 3",
+    "test:custom-url": "BASE_URL=https://example.com cucumber-js test"
   },
   "keywords": [],
   "author": "",

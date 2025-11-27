@@ -1,13 +1,14 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { RegistrationPage } from '../pages/RegistrationPage';
+import { logger } from '../support/helpers/logger';
 
 Given('I click on registration page', async function () {  
-  console.log('Clicking on registration link');
+  logger.debug('Clicking on registration link');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.clickRegistrationLink();
   await registrationPage.verifyRegistrationPageTitle();
-  console.log('On registration page');
-  console.log('Registration page verified successfully');
+  logger.info('On registration page');
+  logger.info('Registration page verified successfully');
 });
 
 When('I enter valid registration details', async function () {
@@ -17,51 +18,51 @@ When('I enter valid registration details', async function () {
   this.email = `testuser${timestamp}@example.com`;
   this.password   = 'Test@1234';
 
-  console.log(`Filling registration form with email: ${this.email}`);
+  logger.debug(`Filling registration form with email: ${this.email}`);
   this.log(`Registering new user: ${this.firstName} ${this.lastName}`);
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.fillRegistrationForm(this.firstName, this.lastName, this.email, this.password);
-  console.log('Registration form filled successfully');
+  logger.debug('Registration form filled successfully');
 }   );
 
 When('I click the register button', async function () {
-  console.log('Clicking register button');
+  logger.debug('Clicking register button');
   this.log('Submitting registration form');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.clickRegisterButton();
-  console.log('Register button clicked');
+  logger.debug('Register button clicked');
 });
 
 Then('I should see a successful registration message', async function () {
-  console.log('Verifying registration success message');
+  logger.info('Verifying registration success message');
   this.log('Checking for registration completion message');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.verifySuccessMessage();
-  console.log('Registration success message verified');
+  logger.info('Registration success message verified');
 });
 
 Then('I should be logged in automatically after registration', async function () {
-  console.log(`Verifying auto-login with email: ${this.email}`);
+  logger.info(`Verifying auto-login with email: ${this.email}`);
   this.log('Checking automatic login after registration');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.verifyLoggedInWithEmail(this.email);
-  console.log('Auto-login verified successfully');
+  logger.info('Auto-login verified successfully');
 });
 
 Then('I should see the logout option in the menu after registration', async function () {
-  console.log('Verifying logout option after registration');
+  logger.info('Verifying logout option after registration');
   this.log('Checking logout link visibility post-registration');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.verifyLogoutOptionVisible();
-  console.log('Logout option verified after registration');
+  logger.info('Logout option verified after registration');
 });
 
 Then('I should not be able to register with an already used email', async function () {
-  console.log('Verifying duplicate email error message');
+  logger.info('Verifying duplicate email error message');
   this.log('Checking for duplicate email validation error');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.verifyDuplicateEmailError();
-  console.log('Duplicate email error verified');
+  logger.info('Duplicate email error verified');
 });
 
 When('I enter registration details with an existing email', async function () {
@@ -70,9 +71,9 @@ When('I enter registration details with an existing email', async function () {
   this.email = 'animesh213123@email.com';
   this.password = 'Test@1234';
 
-  console.log(`Attempting registration with existing email: ${this.email}`);
+  logger.debug(`Attempting registration with existing email: ${this.email}`);
   this.log('Filling form with duplicate email for testing');
   const registrationPage = new RegistrationPage(this.page);
   await registrationPage.fillRegistrationForm(this.firstName, this.lastName, this.email, this.password);
-  console.log('Registration form filled with existing email');
+  logger.debug('Registration form filled with existing email');
 });

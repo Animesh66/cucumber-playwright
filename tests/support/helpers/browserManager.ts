@@ -1,4 +1,5 @@
 import { chromium, firefox, webkit, Browser, BrowserType } from 'playwright';
+import { logger } from './logger';
 
 export class BrowserManager {
   private static browser: Browser;
@@ -27,7 +28,7 @@ export class BrowserManager {
         break;
     }
 
-    console.log(`Launching ${browserType} browser in ${isHeadless ? 'headless' : 'headed'} mode...`);
+    logger.info(`Launching ${browserType} browser in ${isHeadless ? 'headless' : 'headed'} mode...`);
     this.browser = await browserEngine.launch({ headless: isHeadless });
     return this.browser;
   }
@@ -41,7 +42,7 @@ export class BrowserManager {
 
   static async closeBrowser(): Promise<void> {
     if (this.browser) {
-      console.log(`Closing browser...`);
+      logger.info(`Closing browser...`);
       await this.browser.close();
     }
   }
