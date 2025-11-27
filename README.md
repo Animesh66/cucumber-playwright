@@ -179,17 +179,44 @@ npx cucumber-js @rerun.txt
 
 ## 📊 Test Reports
 
-After test execution, reports are generated in the `reports/` directory:
+After test execution, comprehensive reports with screenshots and traces are automatically generated.
 
-### HTML Report
-- **Location**: `reports/cucumber-report.html`
-- **View**: Open in any web browser
-- **Contains**: Detailed test results with screenshots and step-by-step execution
+### Enhanced HTML Report 🎨
+- **Location**: `reports/index.html` (Main report dashboard)
+- **Features**: 
+  - Interactive dashboard with pass/fail statistics
+  - Embedded screenshots for failed scenarios
+  - Downloadable Playwright trace files
+  - Browser and platform metadata
+  - Execution duration and timestamps
+- **View**: Open `reports/index.html` in any browser or run `npm run report:open`
 
-### JSON Report
-- **Location**: `reports/cucumber-report.json`
-- **Format**: Machine-readable format for CI/CD integration
-- **Use Cases**: Custom reporting, test analytics, CI/CD dashboards
+### Legacy Reports
+- **HTML**: `reports/cucumber-report.html`
+- **JSON**: `reports/cucumber-report.json`
+
+### Screenshots & Traces 📸
+For failed scenarios, the framework automatically captures:
+- **Screenshots**: Full-page screenshots saved to `screenshots/` and `reports/screenshots/`
+- **Traces**: Playwright trace files saved to `traces/` and `reports/traces/`
+- **Trace Viewer**: View traces with `npx playwright show-trace traces/filename.zip`
+
+### Report Commands
+```bash
+# Run tests and generate report (automatic)
+npm test
+
+# Generate report from existing results
+npm run report
+
+# Generate and open report in browser
+npm run report:open
+
+# Clean old reports before testing
+npm run clean
+```
+
+📖 **For detailed reporting documentation, see [REPORTING.md](./REPORTING.md)**
 
 ## 🏗️ Framework Architecture
 

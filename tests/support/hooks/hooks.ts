@@ -91,6 +91,15 @@ After(async function (scenario) {
     const tracePath = path.join(traceDir, `${sanitizedScenarioName}_${browserType}_${timestamp}.zip`);
     await this.context.tracing.stop({ path: tracePath });
     logger.error(`Trace captured for failed scenario: ${tracePath}`);
+    
+    // Attach trace file to Cucumber report as application/zip
+    // This will be embedded in the HTML report
+    const traceFile = fs.readFileSync(tracePath);
+    this.attach(traceFile, 'application/zip');
+    
+    // Also attach trace file path as text for reference
+    const traceLink = `Trace file: ${path.relative(process.cwd(), tracePath)}`;
+    this.attach(traceLink, 'text/plain');
   } else {
     // Stop tracing without saving for passed tests
     await this.context.tracing.stop();
