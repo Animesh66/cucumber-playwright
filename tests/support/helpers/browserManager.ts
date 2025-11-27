@@ -9,10 +9,14 @@ export class BrowserManager {
    * Supported values: chromium, firefox, webkit
    * Default: chromium
    * Headless mode can be controlled via HEADLESS environment variable
+   * Automatically defaults to headless in CI environments
    */
   static async launchBrowser(headless?: boolean): Promise<Browser> {
     const browserType = (process.env.BROWSER || 'chromium').toLowerCase();
-    const isHeadless = headless !== undefined ? headless : process.env.HEADLESS === 'true';
+    // Default to headless in CI environment, or use HEADLESS env var, or use provided parameter
+    const isHeadless = headless !== undefined 
+      ? headless 
+      : (process.env.CI === 'true' || process.env.HEADLESS === 'true');
     let browserEngine: BrowserType;
 
     switch (browserType) {
