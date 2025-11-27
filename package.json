@@ -6,11 +6,12 @@
   "scripts": {
     "clean": "ts-node tests/support/clean-reports.ts",
     "test": "npm run clean && cucumber-js test && npm run report",
-    "test:chromium": "npm run clean && BROWSER=chromium cucumber-js test --parallel 3 && npm run report",
-    "test:firefox": "npm run clean && BROWSER=firefox cucumber-js test --parallel 3 && npm run report",
-    "test:webkit": "npm run clean && BROWSER=webkit cucumber-js test --parallel 3 && npm run report",
-    "test:all-browsers": "npm run test:chromium && npm run test:firefox && npm run test:webkit",
+    "test:chromium": "BROWSER=chromium cucumber-js test --parallel 3 && npm run report",
+    "test:firefox": "BROWSER=firefox cucumber-js test --parallel 3 && npm run report",
+    "test:webkit": "BROWSER=webkit cucumber-js test --parallel 3 && npm run report",
+    "test:all-browsers": "npm run clean && npm run test:chromium && npm run test:firefox && npm run test:webkit && npm run report:combined",
     "report": "ts-node tests/support/reporter.ts",
+    "report:combined": "ts-node tests/support/combined-reporter.ts",
     "report:open": "npm run report && open reports/index.html"
   },
   "keywords": [],

@@ -7,6 +7,15 @@ import * as path from 'path';
  * Generates an enhanced HTML report with screenshots and trace attachments for failed tests
  */
 export class CustomReporter {
+  private static getBrowserName(): string {
+    return (process.env.BROWSER || 'chromium').toLowerCase();
+  }
+
+  private static getBrowserReportDir(): string {
+    const browser = this.getBrowserName();
+    return path.join(process.cwd(), 'reports', browser);
+  }
+
   private static reportDir = path.join(process.cwd(), 'reports');
   private static jsonReportPath = path.join(process.cwd(), 'reports/cucumber-report.json');
 
@@ -30,14 +39,22 @@ export class CustomReporter {
       console.log('Generating enhanced HTML report...');
 
       // Get browser name from environment
-      const browserName = (process.env.BROWSER || 'chromium').toLowerCase();
+      const browserName = this.getBrowserName();
+      const browserReportDir = this.getBrowserReportDir();
 
-      // Generate the report
+      // Ensure browser-specific report directory exists
+      await fs.ensureDir(browserReportDir);
+
+      // Copy JSON report to browser-specific directory
+      const browserJsonPath = path.join(browserReportDir, 'cucumber-report.json');
+      await fs.copy(this.jsonReportPath, browserJsonPath);
+
+      // Generate the report in browser-specific directory
       report.generate({
-        jsonDir: this.reportDir,
-        reportPath: this.reportDir,
-        reportName: 'Cucumber Test Execution Report',
-        pageTitle: 'Cucumber Playwright Test Report',
+        jsonDir: browserReportDir,
+        reportPath: browserReportDir,
+        reportName: `Cucumber Test Execution Report - ${browserName.toUpperCase()}`,
+        pageTitle: `Cucumber Playwright Test Report - ${browserName.toUpperCase()}`,
         displayDuration: true,
         displayReportTime: true,
         metadata: {
@@ -57,16 +74,17 @@ export class CustomReporter {
             { label: 'Project', value: 'Cucumber Playwright Framework' },
             { label: 'Release', value: '1.0.0' },
             { label: 'Execution Date', value: new Date().toLocaleString() },
+            { label: 'Browser', value: browserName.toUpperCase() },
             { label: 'Environment', value: process.env.BASE_URL || 'https://demowebshop.tricentis.com/' }
           ]
         }
       });
 
-      console.log('✓ HTML report generated successfully!');
-      console.log(`  Location: ${path.join(this.reportDir, 'index.html')}`);
+      console.log(`✓ HTML report generated successfully for ${browserName}!`);
+      console.log(`  Location: ${path.join(browserReportDir, 'index.html')}`);
       
-      // Copy screenshots and traces to report directory for better access
-      await this.copyAttachmentsToReport();
+      // Copy screenshots and traces to browser-specific report directory
+      await this.copyAttachmentsToReport(browserReportDir);
       
     } catch (error) {
       console.error('Error generating report:', error);
@@ -77,12 +95,12 @@ export class CustomReporter {
   /**
    * Copy screenshots and traces to reports directory for easier access
    */
-  private static async copyAttachmentsToReport(): Promise<void> {
+  private static async copyAttachmentsToReport(targetReportDir: string): Promise<void> {
     try {
       const screenshotsDir = path.join(process.cwd(), 'screenshots');
       const tracesDir = path.join(process.cwd(), 'traces');
-      const reportScreenshotsDir = path.join(this.reportDir, 'screenshots');
-      const reportTracesDir = path.join(this.reportDir, 'traces');
+      const reportScreenshotsDir = path.join(targetReportDir, 'screenshots');
+      const reportTracesDir = path.join(targetReportDir, 'traces');
 
       // Copy screenshots
       if (fs.existsSync(screenshotsDir)) {
