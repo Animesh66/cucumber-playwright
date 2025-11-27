@@ -114,8 +114,10 @@ cucumber-playwright/
 
 2. **Build the Docker image**
    ```bash
-   docker-compose build
+   docker compose build
    ```
+   
+   > **Note:** Use `docker compose` (V2, no hyphen) for GitHub Actions/CI. Locally, both `docker compose` and `docker-compose` work if you have Docker Compose V1 installed.
 
 That's it! All dependencies and browsers are included in the Docker image.
 
@@ -178,18 +180,18 @@ npm run test:webkit
 
 ```bash
 # Run tests with default configuration (Chromium)
-docker-compose up cucumber-playwright-tests
+docker compose up cucumber-playwright-tests
 
 # Run tests on specific browser
-docker-compose up test-chromium
-docker-compose up test-firefox
-docker-compose up test-webkit
+docker compose up test-chromium
+docker compose up test-firefox
+docker compose up test-webkit
 
 # Run tests in detached mode
-docker-compose up -d test-chromium
+docker compose up -d test-chromium
 
 # Clean up containers after execution
-docker-compose down
+docker compose down
 ```
 
 #### Using Docker directly
@@ -215,10 +217,10 @@ docker run --rm -v $(pwd)/reports:/app/reports \
 
 ```bash
 # Run with custom environment variables
-docker-compose run -e BROWSER=webkit -e HEADLESS=true cucumber-playwright-tests
+docker compose run -e BROWSER=webkit -e HEADLESS=true cucumber-playwright-tests
 
 # Run with multiple overrides
-docker-compose run \
+docker compose run \
   -e BROWSER=chromium \
   -e CI=true \
   cucumber-playwright-tests npm run test:chromium
@@ -372,10 +374,10 @@ Cucumber hooks manage test lifecycle:
 
 ```bash
 # Build/rebuild the Docker image
-docker-compose build
+docker compose build
 
 # Build without cache (fresh build)
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # View running containers
 docker ps
@@ -384,19 +386,19 @@ docker ps
 docker ps -a
 
 # Stop running containers
-docker-compose stop
+docker compose stop
 
 # Remove containers
-docker-compose down
+docker compose down
 
 # Remove containers and volumes
-docker-compose down -v
+docker compose down -v
 
 # View container logs
-docker-compose logs cucumber-playwright-tests
+docker compose logs cucumber-playwright-tests
 
 # Follow logs in real-time
-docker-compose logs -f cucumber-playwright-tests
+docker compose logs -f cucumber-playwright-tests
 ```
 
 ### Accessing Reports
@@ -469,14 +471,14 @@ HEADLESS=false npm test
 ### Docker - Debug Mode
 ```bash
 # Access container shell for debugging
-docker-compose run cucumber-playwright-tests /bin/bash
+docker compose run cucumber-playwright-tests /bin/bash
 
 # Run specific test file
-docker-compose run cucumber-playwright-tests \
+docker compose run cucumber-playwright-tests \
   npx cucumber-js tests/features/login/login.feature
 
 # View detailed logs
-docker-compose logs --tail=100 cucumber-playwright-tests
+docker compose logs --tail=100 cucumber-playwright-tests
 ```
 
 ### Console Logs

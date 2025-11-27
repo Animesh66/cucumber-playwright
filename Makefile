@@ -1,5 +1,8 @@
 .PHONY: help build up down test test-chromium test-firefox test-webkit logs clean rebuild shell
 
+# Docker Compose command (use V2 syntax for compatibility with CI/CD)
+DOCKER_COMPOSE := docker compose
+
 # Default target
 help:
 	@echo "Cucumber-Playwright Docker Commands"
@@ -18,45 +21,45 @@ help:
 
 # Build Docker image
 build:
-	docker-compose build
+	$(DOCKER_COMPOSE) build
 
 # Start containers
 up:
-	docker-compose up
+	$(DOCKER_COMPOSE) up
 
 # Stop and remove containers
 down:
-	docker-compose down
+	$(DOCKER_COMPOSE) down
 
 # Run all tests
 test:
-	docker-compose up cucumber-playwright-tests
+	$(DOCKER_COMPOSE) up cucumber-playwright-tests
 
 # Run tests on Chromium
 test-chromium:
-	docker-compose up test-chromium
+	$(DOCKER_COMPOSE) up test-chromium
 
 # Run tests on Firefox
 test-firefox:
-	docker-compose up test-firefox
+	$(DOCKER_COMPOSE) up test-firefox
 
 # Run tests on WebKit
 test-webkit:
-	docker-compose up test-webkit
+	$(DOCKER_COMPOSE) up test-webkit
 
 # View logs
 logs:
-	docker-compose logs -f cucumber-playwright-tests
+	$(DOCKER_COMPOSE) logs -f cucumber-playwright-tests
 
 # Clean up containers and volumes
 clean:
-	docker-compose down -v
+	$(DOCKER_COMPOSE) down -v
 	rm -rf reports/* logs/*
 
 # Rebuild without cache
 rebuild:
-	docker-compose build --no-cache
+	$(DOCKER_COMPOSE) build --no-cache
 
 # Access container shell
 shell:
-	docker-compose run cucumber-playwright-tests /bin/bash
+	$(DOCKER_COMPOSE) run cucumber-playwright-tests /bin/bash

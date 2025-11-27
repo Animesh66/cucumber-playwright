@@ -10,6 +10,11 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    name: Test on ${{ matrix.browser }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -26,15 +31,15 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps chromium firefox webkit
     
-    - name: Run Cucumber tests
-      run: npm run test
+    - name: Run Cucumber tests on ${{ matrix.browser }}
+      run: npm run test:${{ matrix.browser }}
       continue-on-error: true
     
     - name: Upload test logs
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-logs
+        name: test-logs-${{ matrix.browser }}
         path: logs/
         retention-days: 30
         if-no-files-found: warn
@@ -43,7 +48,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-reports
+        name: test-reports-${{ matrix.browser }}
         path: reports/
         retention-days: 30
         if-no-files-found: warn
@@ -51,10 +56,10 @@ jobs:
     - name: Publish test report summary
       if: always()
       run: |
-        echo "## Test Report Summary" >> $GITHUB_STEP_SUMMARY
+        echo "## Test Report Summary - ${{ matrix.browser }}" >> $GITHUB_STEP_SUMMARY
         echo "Test reports have been generated and uploaded as artifacts." >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### Available Reports:" >> $GITHUB_STEP_SUMMARY
-        echo "- HTML Report: Download the 'test-reports' artifact and open \`index.html\`" >> $GITHUB_STEP_SUMMARY
+        echo "- HTML Report: Download the 'test-reports-${{ matrix.browser }}' artifact and open \`index.html\`" >> $GITHUB_STEP_SUMMARY
         echo "- JSON Report: Available in \`cucumber-report.json\`" >> $GITHUB_STEP_SUMMARY
-        echo "- Logs: Download the 'test-logs' artifact" >> $GITHUB_STEP_SUMMARY
+        echo "- Logs: Download the 'test-logs-${{ matrix.browser }}' artifact" >> $GITHUB_STEP_SUMMARY

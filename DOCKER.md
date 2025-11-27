@@ -2,6 +2,8 @@
 
 This guide provides detailed information about running the Cucumber-Playwright framework in Docker containers.
 
+> **Important Note:** This guide uses Docker Compose V2 syntax (`docker compose` without hyphen). If you're using an older version with `docker-compose` (with hyphen), both syntaxes work locally, but CI/CD platforms like GitHub Actions require V2 syntax.
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -291,6 +293,8 @@ docker-compose build
 
 ## CI/CD Integration
 
+**Note:** GitHub Actions and modern CI/CD platforms use Docker Compose V2 syntax (`docker compose` instead of `docker-compose`).
+
 ### GitHub Actions
 
 ```yaml
@@ -303,17 +307,17 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Build Docker image
-        run: docker-compose build
+        run: docker compose build
       
       - name: Run tests
-        run: docker-compose up --exit-code-from cucumber-playwright-tests
+        run: docker compose up --exit-code-from cucumber-playwright-tests
       
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: reports/
