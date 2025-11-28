@@ -38,30 +38,15 @@ jobs:
         CI: true
       continue-on-error: true
     
-    - name: Upload test logs for merge
+    - name: Upload artifacts for merge job
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-logs-${{ matrix.browser }}
-        path: logs/
-        retention-days: 1
-        if-no-files-found: warn
-    
-    - name: Upload JSON reports for merge
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: json-report-${{ matrix.browser }}
-        path: reports/cucumber-report.json
-        retention-days: 1
-        if-no-files-found: warn
-    
-    - name: Upload browser-specific HTML report for merge
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: browser-report-${{ matrix.browser }}
-        path: reports/${{ matrix.browser }}/
+        name: test-results-${{ matrix.browser }}
+        path: |
+          logs/
+          reports/cucumber-report.json
+          reports/${{ matrix.browser }}/
         retention-days: 1
         if-no-files-found: warn
 
@@ -83,31 +68,35 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Download all JSON reports
+    - name: Download all test results
       uses: actions/download-artifact@v4
       with:
-        pattern: json-report-*
-        path: downloaded-reports
+        pattern: test-results-*
+        path: downloaded-results
     
-    - name: Download all browser HTML reports
-      uses: actions/download-artifact@v4
-      with:
-        pattern: browser-report-*
-        path: reports
-    
-    - name: Download all test logs
-      uses: actions/download-artifact@v4
-      with:
-        pattern: test-logs-*
-        path: downloaded-logs
-    
-    - name: Merge test logs
+    - name: Organize files for report generation
       run: |
-        mkdir -p combined-logs
+        mkdir -p downloaded-reports combined-logs reports
+        
         for browser in chromium firefox webkit; do
-          if [ -d "downloaded-logs/test-logs-$browser" ]; then
-            mkdir -p "combined-logs/$browser"
-            cp -r "downloaded-logs/test-logs-$browser/"* "combined-logs/$browser/" 2>/dev/null || true
+          if [ -d "downloaded-results/test-results-$browser" ]; then
+            # Copy JSON report for merging
+            if [ -f "downloaded-results/test-results-$browser/reports/cucumber-report.json" ]; then
+              mkdir -p "downloaded-reports/json-report-$browser"
+              cp "downloaded-results/test-results-$browser/reports/cucumber-report.json" "downloaded-reports/json-report-$browser/"
+            fi
+            
+            # Copy browser HTML reports
+            if [ -d "downloaded-results/test-results-$browser/reports/$browser" ]; then
+              mkdir -p "reports/browser-report-$browser"
+              cp -r "downloaded-results/test-results-$browser/reports/$browser/"* "reports/browser-report-$browser/"
+            fi
+            
+            # Merge logs by browser
+            if [ -d "downloaded-results/test-results-$browser/logs" ]; then
+              mkdir -p "combined-logs/$browser"
+              cp -r "downloaded-results/test-results-$browser/logs/"* "combined-logs/$browser/" 2>/dev/null || true
+            fi
           fi
         done
     
