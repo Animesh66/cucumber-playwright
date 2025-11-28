@@ -121,6 +121,16 @@ jobs:
         retention-days: 30
         if-no-files-found: warn
     
+    - name: Delete intermediate artifacts
+      if: always()
+      uses: geekyeggo/delete-artifact@v5
+      with:
+        name: |
+          test-results-chromium
+          test-results-firefox
+          test-results-webkit
+        failOnError: false
+    
     - name: Publish combined report summary
       if: always()
       run: |
