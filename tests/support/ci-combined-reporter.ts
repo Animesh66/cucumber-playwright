@@ -36,39 +36,9 @@ export class CICombinedReporter {
       // Get browser metadata
       const browserMetadata = await this.getBrowserMetadata();
 
-      // Generate the combined HTML report using multiple-cucumber-html-reporter
-      report.generate({
-        jsonDir: jsonDir,
-        reportPath: this.reportDir,
-        reportName: 'Combined Cross-Browser Test Report',
-        pageTitle: 'Cucumber Playwright - All Browsers Test Results',
-        displayDuration: true,
-        displayReportTime: true,
-        metadata: {
-          browser: {
-            name: 'multi',
-            version: 'all'
-          },
-          device: 'CI/CD Pipeline',
-          platform: {
-            name: process.platform,
-            version: process.version
-          }
-        },
-        customData: {
-          title: 'Cross-Browser Test Execution Summary',
-          data: [
-            { label: 'Project', value: 'Cucumber Playwright Framework' },
-            { label: 'Release', value: '1.0.0' },
-            { label: 'Execution Date', value: new Date().toLocaleString() },
-            { label: 'Browsers Tested', value: browserMetadata.tested.join(', ') },
-            { label: 'Total Browsers', value: browserMetadata.tested.length.toString() },
-            { label: 'Total Features', value: browserMetadata.totalFeatures.toString() },
-            { label: 'CI Environment', value: 'GitHub Actions' },
-            { label: 'Environment', value: process.env.BASE_URL || 'https://demowebshop.tricentis.com/' }
-          ]
-        }
-      });
+      // Generate individual browser reports AND the combined overview
+      // The generateIndividualBrowserReports method will handle everything
+      await this.generateIndividualBrowserReports(collectedBrowsers, jsonDir, browserMetadata);
 
       console.log('✓ Combined HTML report generated successfully using multiple-cucumber-html-reporter!');
       console.log(`  Location: ${path.join(this.reportDir, 'index.html')}`);
@@ -85,7 +55,8 @@ export class CICombinedReporter {
   }
 
   /**
-   * Collect all JSON report files from downloaded artifacts and copy them to the json directory
+   * Collect all JSON report files and organize them for multi-browser reporting
+   * Creates separate browser-named JSON files that the library can process
    */
   private static async collectAndCopyJsonReports(jsonDir: string): Promise<string[]> {
     const collectedBrowsers: string[] = [];
@@ -114,9 +85,9 @@ export class CICombinedReporter {
         }
 
         if (sourceJsonPath) {
-          // Copy the JSON file with browser-specific naming
-          // The library uses filename patterns to determine browser info
-          const targetPath = path.join(jsonDir, `${browser}.cucumber.json`);
+          // Copy JSON file - use simple naming pattern
+          // The library will detect browser from filename pattern
+          const targetPath = path.join(jsonDir, `${browser}.json`);
           await fs.copy(sourceJsonPath, targetPath);
           console.log(`  ✓ Copied ${browser} report to: ${targetPath}`);
           collectedBrowsers.push(browser);
@@ -129,6 +100,92 @@ export class CICombinedReporter {
     }
 
     return collectedBrowsers;
+  }
+
+  /**
+   * Generate individual browser reports with proper metadata
+   * This ensures each browser is correctly identified in the combined report
+   */
+  private static async generateIndividualBrowserReports(
+    browsers: string[], 
+    jsonDir: string, 
+    browserMetadata: { tested: string[], totalFeatures: number }
+  ): Promise<void> {
+    console.log(`  ℹ Generating individual reports for ${browsers.length} browser(s)...`);
+    
+    for (const browser of browsers) {
+      try {
+        const browserJsonPath = path.join(jsonDir, `${browser}.json`);
+        if (!fs.existsSync(browserJsonPath)) continue;
+
+        // Create browser-specific subdirectory
+        const browserSubDir = path.join(jsonDir, browser);
+        await fs.ensureDir(browserSubDir);
+
+        // Copy the JSON to the browser subdirectory
+        const targetJsonPath = path.join(browserSubDir, 'cucumber-report.json');
+        await fs.copy(browserJsonPath, targetJsonPath);
+
+        // Generate report for this specific browser with metadata
+        report.generate({
+          jsonDir: browserSubDir,
+          reportPath: path.join(this.reportDir, `browser-report-${browser}`),
+          reportName: `${browser.charAt(0).toUpperCase() + browser.slice(1)} Test Report`,
+          metadata: {
+            browser: {
+              name: browser.charAt(0).toUpperCase() + browser.slice(1),
+              version: 'latest'
+            },
+            platform: {
+              name: process.platform,
+              version: process.version
+            }
+          }
+        });
+
+        console.log(`  ✓ Generated individual report for ${browser}`);
+      } catch (error) {
+        console.warn(`  ⚠ Could not generate report for ${browser}:`, error);
+      }
+    }
+
+    // Now generate the combined overview report
+    // Point to the root JSON directory which contains all browser-named JSON files
+    const combinedJsonDir = path.join(this.reportDir, 'json-combined');
+    await fs.ensureDir(combinedJsonDir);
+    
+    // Copy all browser JSON files to the combined directory
+    for (const browser of browsers) {
+      const sourceJson = path.join(jsonDir, `${browser}.json`);
+      if (fs.existsSync(sourceJson)) {
+        await fs.copy(sourceJson, path.join(combinedJsonDir, `${browser}.json`));
+      }
+    }
+
+    // Generate the combined overview report
+    report.generate({
+      jsonDir: combinedJsonDir,
+      reportPath: this.reportDir,
+      reportName: 'Combined Cross-Browser Test Report',
+      pageTitle: 'Cucumber Playwright - All Browsers Test Results',
+      displayDuration: true,
+      displayReportTime: true,
+      customData: {
+        title: 'Cross-Browser Test Execution Summary',
+        data: [
+          { label: 'Project', value: 'Cucumber Playwright Framework' },
+          { label: 'Release', value: '1.0.0' },
+          { label: 'Execution Date', value: new Date().toLocaleString() },
+          { label: 'Browsers Tested', value: browserMetadata.tested.join(', ') },
+          { label: 'Total Browsers', value: browserMetadata.tested.length.toString() },
+          { label: 'Total Features', value: browserMetadata.totalFeatures.toString() },
+          { label: 'CI Environment', value: 'GitHub Actions' },
+          { label: 'Environment', value: process.env.BASE_URL || 'https://demowebshop.tricentis.com/' }
+        ]
+      }
+    });
+
+    console.log(`  ✓ Generated combined overview report`);
   }
 
   /**
