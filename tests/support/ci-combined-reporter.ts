@@ -103,89 +103,389 @@ export class CICombinedReporter {
   }
 
   /**
-   * Generate individual browser reports with proper metadata
-   * This ensures each browser is correctly identified in the combined report
+   * Generate individual browser reports first, then combined
+   * Each browser gets its own report with proper metadata
    */
   private static async generateIndividualBrowserReports(
     browsers: string[], 
     jsonDir: string, 
     browserMetadata: { tested: string[], totalFeatures: number }
   ): Promise<void> {
-    console.log(`  ℹ Generating individual reports for ${browsers.length} browser(s)...`);
+    console.log(`  ℹ Generating individual browser reports...`);
     
+    // Map playwright browser names to standard display names
+    const browserNameMap: any = {
+      'chromium': 'chrome',
+      'firefox': 'firefox',
+      'webkit': 'safari'
+    };
+    
+    // Generate individual reports for each browser with proper metadata
     for (const browser of browsers) {
       try {
         const browserJsonPath = path.join(jsonDir, `${browser}.json`);
         if (!fs.existsSync(browserJsonPath)) continue;
 
-        // Create browser-specific subdirectory
-        const browserSubDir = path.join(jsonDir, browser);
-        await fs.ensureDir(browserSubDir);
-
-        // Copy the JSON to the browser subdirectory
-        const targetJsonPath = path.join(browserSubDir, 'cucumber-report.json');
-        await fs.copy(browserJsonPath, targetJsonPath);
-
-        // Generate report for this specific browser with metadata
+        const displayName = browserNameMap[browser] || browser;
+        
+        // Create browser-specific directory for individual report
+        const browserReportDir = path.join(jsonDir, browser);
+        await fs.ensureDir(browserReportDir);
+        
+        // Copy JSON to browser directory
+        await fs.copy(browserJsonPath, path.join(browserReportDir, 'cucumber-report.json'));
+        
+        // Generate individual browser report with metadata
         report.generate({
-          jsonDir: browserSubDir,
+          jsonDir: browserReportDir,
           reportPath: path.join(this.reportDir, `browser-report-${browser}`),
-          reportName: `${browser.charAt(0).toUpperCase() + browser.slice(1)} Test Report`,
+          reportName: `${displayName.charAt(0).toUpperCase() + displayName.slice(1)} Test Report`,
+          pageTitle: `Test Results - ${displayName.toUpperCase()}`,
+          displayDuration: true,
+          displayReportTime: true,
           metadata: {
             browser: {
-              name: browser.charAt(0).toUpperCase() + browser.slice(1),
+              name: displayName,
               version: 'latest'
             },
+            device: 'CI/CD Pipeline',
             platform: {
-              name: process.platform,
+              name: process.platform === 'darwin' ? 'macOS' : process.platform === 'win32' ? 'Windows' : 'Linux',
               version: process.version
             }
           }
         });
-
+        
         console.log(`  ✓ Generated individual report for ${browser}`);
       } catch (error) {
-        console.warn(`  ⚠ Could not generate report for ${browser}:`, error);
+        console.warn(`  ⚠ Could not generate ${browser} report:`, error);
       }
     }
 
-    // Now generate the combined overview report
-    // Point to the root JSON directory which contains all browser-named JSON files
-    const combinedJsonDir = path.join(this.reportDir, 'json-combined');
-    await fs.ensureDir(combinedJsonDir);
+    // Generate custom landing page that links to individual browser reports
+    await this.generateCustomCombinedIndex(browsers, browserMetadata);
+    console.log(`  ✓ Generated combined landing page`);
+  }
+
+  /**
+   * Generate a custom combined index page with links to individual browser reports
+   * This avoids the metadata issues with multiple-cucumber-html-reporter
+   */
+  private static async generateCustomCombinedIndex(
+    browsers: string[], 
+    browserMetadata: { tested: string[], totalFeatures: number }
+  ): Promise<void> {
+    // Get statistics from each browser report
+    const browserStats = await this.getBrowserStats(browsers);
     
-    // Copy all browser JSON files to the combined directory
+    // Calculate totals
+    let totalPassed = 0;
+    let totalFailed = 0;
+    let totalSkipped = 0;
+    
+    browserStats.forEach(stat => {
+      totalPassed += stat.passed;
+      totalFailed += stat.failed;
+      totalSkipped += stat.skipped;
+    });
+    
+    const totalTests = totalPassed + totalFailed + totalSkipped;
+    const successRate = totalTests > 0 ? ((totalPassed / totalTests) * 100).toFixed(1) : '0';
+    const overallStatus = totalFailed > 0 ? 'failed' : 'passed';
+    const timestamp = new Date().toLocaleString();
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cucumber Playwright Test Report - All Browsers</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .header h1 { font-size: 32px; color: #2d3748; margin-bottom: 10px; }
+    .header .subtitle { color: #718096; font-size: 16px; }
+    .timestamp { color: #a0aec0; font-size: 14px; margin-top: 10px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .summary-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    .summary-card .label {
+      color: #718096;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .summary-card .value { font-size: 36px; font-weight: bold; margin-bottom: 5px; }
+    .summary-card.passed .value { color: #48bb78; }
+    .summary-card.failed .value { color: #f56565; }
+    .summary-card.skipped .value { color: #ecc94b; }
+    .summary-card.total .value { color: #4299e1; }
+    .summary-card.rate .value { color: ${overallStatus === 'passed' ? '#48bb78' : '#f56565'}; }
+    .browsers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    .browser-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .browser-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3); }
+    .browser-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .browser-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #2d3748;
+    }
+    .browser-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .browser-icon.chromium { background: linear-gradient(135deg, #4285f4, #34a853); }
+    .browser-icon.firefox { background: linear-gradient(135deg, #ff7139, #e66000); }
+    .browser-icon.webkit { background: linear-gradient(135deg, #147efb, #0d5fd9); }
+    .status-badge {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-badge.passed { background: #c6f6d5; color: #22543d; }
+    .status-badge.failed { background: #fed7d7; color: #742a2a; }
+    .browser-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .stat-item { padding: 12px; border-radius: 8px; background: #f7fafc; }
+    .stat-label { font-size: 12px; color: #718096; margin-bottom: 5px; font-weight: 600; }
+    .stat-value { font-size: 24px; font-weight: bold; }
+    .stat-value.passed { color: #48bb78; }
+    .stat-value.failed { color: #f56565; }
+    .stat-value.skipped { color: #ecc94b; }
+    .stat-value.duration { color: #667eea; }
+    .view-report-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .view-report-btn:hover {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .footer {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #718096;
+      font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    @media (max-width: 768px) {
+      .browsers-grid { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 Cucumber Playwright Test Report</h1>
+      <div class="subtitle">Cross-Browser Test Execution Results</div>
+      <div class="timestamp">Generated on ${timestamp}</div>
+    </div>
+    <div class="summary">
+      <div class="summary-card passed">
+        <div class="label">Passed</div>
+        <div class="value">${totalPassed}</div>
+      </div>
+      <div class="summary-card failed">
+        <div class="label">Failed</div>
+        <div class="value">${totalFailed}</div>
+      </div>
+      <div class="summary-card skipped">
+        <div class="label">Skipped</div>
+        <div class="value">${totalSkipped}</div>
+      </div>
+      <div class="summary-card total">
+        <div class="label">Total Tests</div>
+        <div class="value">${totalTests}</div>
+      </div>
+      <div class="summary-card rate">
+        <div class="label">Success Rate</div>
+        <div class="value">${successRate}%</div>
+      </div>
+    </div>
+    <div class="browsers-grid">
+${browserStats.map(stat => {
+  const browserIcon = stat.browser === 'chromium' ? '🌐' : stat.browser === 'firefox' ? '🦊' : '🧭';
+  const browserStatus = stat.failed > 0 ? 'failed' : 'passed';
+  return `      <div class="browser-card">
+        <div class="browser-header">
+          <div class="browser-name">
+            <div class="browser-icon ${stat.browser}">${browserIcon}</div>
+            <span>${stat.browser.charAt(0).toUpperCase() + stat.browser.slice(1)}</span>
+          </div>
+          <span class="status-badge ${browserStatus}">${browserStatus}</span>
+        </div>
+        <div class="browser-stats">
+          <div class="stat-item">
+            <div class="stat-label">Passed</div>
+            <div class="stat-value passed">${stat.passed}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Failed</div>
+            <div class="stat-value failed">${stat.failed}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Skipped</div>
+            <div class="stat-value skipped">${stat.skipped}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Duration</div>
+            <div class="stat-value duration">${stat.duration}s</div>
+          </div>
+        </div>
+        <a href="browser-report-${stat.browser}/index.html" class="view-report-btn">View Detailed Report</a>
+      </div>`;
+}).join('\n')}
+    </div>
+    <div class="footer">
+      <p>Cucumber Playwright Framework | Cross-Browser Testing with Playwright</p>
+      <p style="margin-top: 10px;">🚀 Generated by CI Combined Reporter</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    // Write the custom index.html
+    const indexPath = path.join(this.reportDir, 'index.html');
+    await fs.writeFile(indexPath, html);
+    console.log(`  ✓ Generated custom combined index at: ${indexPath}`);
+  }
+
+  /**
+   * Get detailed statistics from each browser's JSON report
+   */
+  private static async getBrowserStats(browsers: string[]): Promise<Array<{
+    browser: string;
+    passed: number;
+    failed: number;
+    skipped: number;
+    total: number;
+    duration: string;
+  }>> {
+    const stats: Array<any> = [];
+
     for (const browser of browsers) {
-      const sourceJson = path.join(jsonDir, `${browser}.json`);
-      if (fs.existsSync(sourceJson)) {
-        await fs.copy(sourceJson, path.join(combinedJsonDir, `${browser}.json`));
+      try {
+        const jsonPath = path.join(this.reportDir, 'json', `${browser}.json`);
+        if (!fs.existsSync(jsonPath)) continue;
+
+        const reportData = await fs.readJson(jsonPath);
+        let passed = 0;
+        let failed = 0;
+        let skipped = 0;
+        let totalDuration = 0;
+
+        // Iterate through features and scenarios
+        reportData.forEach((feature: any) => {
+          feature.elements?.forEach((scenario: any) => {
+            let scenarioFailed = false;
+            let scenarioSkipped = false;
+            
+            scenario.steps?.forEach((step: any) => {
+              const stepResult = step.result?.status || 'undefined';
+              const duration = step.result?.duration || 0;
+              totalDuration += duration;
+
+              if (stepResult === 'failed') {
+                scenarioFailed = true;
+              } else if (stepResult === 'skipped' || stepResult === 'undefined') {
+                scenarioSkipped = true;
+              }
+            });
+
+            if (scenarioFailed) {
+              failed++;
+            } else if (scenarioSkipped) {
+              skipped++;
+            } else {
+              passed++;
+            }
+          });
+        });
+
+        stats.push({
+          browser,
+          passed,
+          failed,
+          skipped,
+          total: passed + failed + skipped,
+          duration: (totalDuration / 1000000000).toFixed(2)
+        });
+      } catch (error) {
+        console.warn(`  ⚠ Could not get stats for ${browser}:`, error);
       }
     }
 
-    // Generate the combined overview report
-    report.generate({
-      jsonDir: combinedJsonDir,
-      reportPath: this.reportDir,
-      reportName: 'Combined Cross-Browser Test Report',
-      pageTitle: 'Cucumber Playwright - All Browsers Test Results',
-      displayDuration: true,
-      displayReportTime: true,
-      customData: {
-        title: 'Cross-Browser Test Execution Summary',
-        data: [
-          { label: 'Project', value: 'Cucumber Playwright Framework' },
-          { label: 'Release', value: '1.0.0' },
-          { label: 'Execution Date', value: new Date().toLocaleString() },
-          { label: 'Browsers Tested', value: browserMetadata.tested.join(', ') },
-          { label: 'Total Browsers', value: browserMetadata.tested.length.toString() },
-          { label: 'Total Features', value: browserMetadata.totalFeatures.toString() },
-          { label: 'CI Environment', value: 'GitHub Actions' },
-          { label: 'Environment', value: process.env.BASE_URL || 'https://demowebshop.tricentis.com/' }
-        ]
-      }
-    });
-
-    console.log(`  ✓ Generated combined overview report`);
+    return stats;
   }
 
   /**
